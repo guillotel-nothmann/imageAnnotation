@@ -1,5 +1,6 @@
 import numpy as np
 import threading
+import matplotlib
 from matplotlib.lines import Line2D
 from matplotlib.artist import Artist 
 from matplotlib.backend_tools import ToolBase
@@ -17,6 +18,7 @@ from tkinter import ttk, messagebox
 class Editor ():
 
     def __init__(self): 
+        matplotlib.use('TkAgg')
         self.clickX = None
         self.clickY = None
         self.releaseX  = None
@@ -40,7 +42,6 @@ class Editor ():
         self.yMin = 0
         self.yMax = 0
         self.zoomFactor = 1.25
-        
         
         self.simpleChoixBox = SimpleChoiceBox() 
         
