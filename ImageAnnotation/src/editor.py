@@ -43,23 +43,14 @@ class Editor ():
         self.yMax = 0
         self.zoomFactor = 1.25
         
-        self.simpleChoixBox = SimpleChoiceBox() 
-        
-        
+        self.simpleChoixBox = SimpleChoiceBox()  
         ''' plot, ax, figure '''
         plt.rcParams['image.cmap'] = 'gray'
-        plt.rcParams['toolbar'] = 'toolmanager'  
-        
-        
-        
+        plt.rcParams['toolbar'] = 'toolmanager'   
         self.fig, self.ax = plt.subplots() 
-        self.fig.canvas.set_window_title('METS - Image anotation')
-         
-        
+        self.fig.canvas.set_window_title('METS - Image anotation') 
         self.ax.polygonInteractorList = []
-        self.ax.editor = self
-        
-        
+        self.ax.editor = self 
         
         ''' dictionaries'''
         self.fcDictionary= {"paragraph": (0.00,0.50,0.74,0.2), 
@@ -166,6 +157,11 @@ class Editor ():
         self.fig.canvas.manager.toolbar.add_tool('Line drawing', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('Other', '', 1) 
           
+        ''' maximise '''
+        if callable(plt.get_current_fig_manager):
+            figManager = plt.get_current_fig_manager()
+            if callable (figManager.full_screen_toggle): figManager.full_screen_toggle()
+        
         ''' show plot '''
         plt.show()  
         
@@ -268,7 +264,7 @@ class Editor ():
             self.ax.polygonInteractorList.append(PolygonInteractor(self.ax,polygon, textRegion)) 
     
     def motion (self, event):   
-        if self.annot._visible == True:
+        if hasattr(self, 'annot._visible') and self.annot._visible == True:
             self.annot.set_visible(False) 
             self.fig.canvas.draw_idle() 
         
