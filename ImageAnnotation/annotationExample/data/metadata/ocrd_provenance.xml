@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<prov:document xmlns:prov="http://www.w3.org/ns/prov#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns3="http://openprovenance.org/prov/extension#" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ocrd="http://www.ocr-d.de">
+    <prov:entity prov:id="ocrd:unique__ID__OCR__D__IMG__BIN">
+        <prov:type xsi:type="xsd:QName">ocrd:mets__referencedFileGroup</prov:type>
+        <prov:value xsi:type="xsd:string">OCR-D-IMG-BIN</prov:value>
+    </prov:entity>
+    <prov:entity prov:id="ocrd:unique__ID__OCR__D__IMG__CROP">
+        <prov:type xsi:type="xsd:QName">ocrd:mets__referencedFileGroup</prov:type>
+        <prov:value xsi:type="xsd:string">OCR-D-IMG-CROP</prov:value>
+    </prov:entity>
+    <prov:entity prov:id="ocrd:unique__ID__mets__xml__1591861167366__0003">
+        <prov:type xsi:type="xsd:QName">ocrd:mets</prov:type>
+        <prov:value xsi:type="xsd:string">mets.xml.1591861167366_0003</prov:value>
+    </prov:entity>
+    <prov:entity prov:id="ocrd:unique__ID__OCR__D__IMG">
+        <prov:type xsi:type="xsd:QName">ocrd:mets__referencedFileGroup</prov:type>
+        <prov:value xsi:type="xsd:string">OCR-D-IMG</prov:value>
+    </prov:entity>
+    <prov:entity prov:id="ocrd:unique__ID__mets__xml__1591861167366__0002">
+        <prov:type xsi:type="xsd:QName">ocrd:mets</prov:type>
+        <prov:type xsi:type="xsd:QName">ocrd:mets</prov:type>
+        <prov:value xsi:type="xsd:string">mets.xml.1591861167366_0002</prov:value>
+    </prov:entity>
+    <prov:entity prov:id="ocrd:unique__ID__mets__xml__1591861167366__0001">
+        <prov:type xsi:type="xsd:QName">ocrd:mets</prov:type>
+        <prov:type xsi:type="xsd:QName">ocrd:mets</prov:type>
+        <prov:value xsi:type="xsd:string">mets.xml.1591861167366_0001</prov:value>
+    </prov:entity>
+    <prov:entity prov:id="ocrd:unique__ID__OCR__D__CROP">
+        <prov:type xsi:type="xsd:QName">ocrd:mets__referencedFileGroup</prov:type>
+        <prov:type xsi:type="xsd:QName">ocrd:mets__referencedFileGroup</prov:type>
+        <prov:value xsi:type="xsd:string">OCR-D-CROP</prov:value>
+    </prov:entity>
+    <prov:entity prov:id="ocrd:unique__ID__mets__xml__1591861167366__0000">
+        <prov:type xsi:type="xsd:QName">ocrd:mets</prov:type>
+        <prov:value xsi:type="xsd:string">mets.xml.1591861167366_0000</prov:value>
+    </prov:entity>
+    <prov:entity prov:id="ocrd:parameterFile__unique__ID__2020__06__11T07__39__27">
+        <prov:type xsi:type="xsd:QName">ocrd:parameter__file</prov:type>
+        <prov:value xsi:type="xsd:string">{\"impl\":\"sauvola\"}</prov:value>
+    </prov:entity>
+    <prov:entity prov:id="ocrd:unique__ID__OCR__D__SEG__REGION">
+        <prov:type xsi:type="xsd:QName">ocrd:mets__referencedFileGroup</prov:type>
+        <prov:value xsi:type="xsd:string">OCR-D-SEG-REGION</prov:value>
+    </prov:entity>
+    <prov:entity prov:id="ocrd:unique__ID__OCR__D__BIN">
+        <prov:type xsi:type="xsd:QName">ocrd:mets__referencedFileGroup</prov:type>
+        <prov:type xsi:type="xsd:QName">ocrd:mets__referencedFileGroup</prov:type>
+        <prov:value xsi:type="xsd:string">OCR-D-BIN</prov:value>
+    </prov:entity>
+    <prov:activity prov:id="ocrd:processor__unique__ID__2020__06__11T07__39__44">
+        <prov:startTime>2020-06-11T07:39:44.745Z</prov:startTime>
+        <prov:endTime>2020-06-11T07:39:46.361Z</prov:endTime>
+        <prov:label>ocrd-tesserocr-segment-region_Version 0.8.2, ocrd/core 2.4.4</prov:label>
+        <prov:type xsi:type="xsd:QName">ocrd:processor</prov:type>
+    </prov:activity>
+    <prov:activity prov:id="ocrd:processor__unique__ID__2020__06__11T07__39__27">
+        <prov:startTime>2020-06-11T07:39:27.979Z</prov:startTime>
+        <prov:endTime>2020-06-11T07:39:36.026Z</prov:endTime>
+        <prov:label>ocrd-olena-binarize_Version "1.1.5", ocrd/core "2.4.4"</prov:label>
+        <prov:type xsi:type="xsd:QName">ocrd:processor</prov:type>
+    </prov:activity>
+    <prov:activity prov:id="ocrd:workflow__unique__ID__2020__06__11T07__39__27">
+        <prov:startTime>2020-06-11T07:39:27.366Z</prov:startTime>
+        <prov:endTime>2020-06-11T07:39:46.361Z</prov:endTime>
+        <prov:label>workflow-unique ID-2020-06-11T07-39-27</prov:label>
+        <prov:type xsi:type="xsd:QName">ocrd:workflow</prov:type>
+        <prov:type xsi:type="xsd:QName">ocrd:workflow</prov:type>
+    </prov:activity>
+    <prov:activity prov:id="ocrd:processor__unique__ID__2020__06__11T07__39__37">
+        <prov:startTime>2020-06-11T07:39:37.586Z</prov:startTime>
+        <prov:endTime>2020-06-11T07:39:43.965Z</prov:endTime>
+        <prov:label>ocrd-anybaseocr-crop_Version 0.0.1, ocrd/core 2.4.4</prov:label>
+        <prov:type xsi:type="xsd:QName">ocrd:processor</prov:type>
+    </prov:activity>
+    <prov:agent prov:id="ocrd:Execute__Taverna__OCR__D__Workflow"/>
+    <prov:used>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__44"/>
+        <prov:entity prov:ref="ocrd:unique__ID__OCR__D__CROP"/>
+    </prov:used>
+    <prov:used>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__44"/>
+        <prov:entity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0002"/>
+    </prov:used>
+    <prov:used>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__37"/>
+        <prov:entity prov:ref="ocrd:unique__ID__OCR__D__BIN"/>
+    </prov:used>
+    <prov:used>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__37"/>
+        <prov:entity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0001"/>
+    </prov:used>
+    <prov:used>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__27"/>
+        <prov:entity prov:ref="ocrd:unique__ID__OCR__D__IMG"/>
+    </prov:used>
+    <prov:used>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__27"/>
+        <prov:entity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0000"/>
+    </prov:used>
+    <prov:used>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__27"/>
+        <prov:entity prov:ref="ocrd:parameterFile__unique__ID__2020__06__11T07__39__27"/>
+    </prov:used>
+    <prov:wasGeneratedBy>
+        <prov:entity prov:ref="ocrd:unique__ID__OCR__D__SEG__REGION"/>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__44"/>
+        <prov:role xsi:type="xsd:string">'ocrd:{http://www.ocr-d.de}processor_unique_ID_2020_06_11T07_39_46'</prov:role>
+    </prov:wasGeneratedBy>
+    <prov:wasGeneratedBy>
+        <prov:entity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0003"/>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__44"/>
+        <prov:role xsi:type="xsd:string">'ocrd:{http://www.ocr-d.de}processor_unique_ID_2020_06_11T07_39_46'</prov:role>
+    </prov:wasGeneratedBy>
+    <prov:wasGeneratedBy>
+        <prov:entity prov:ref="ocrd:unique__ID__OCR__D__CROP"/>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__37"/>
+        <prov:role xsi:type="xsd:string">'ocrd:{http://www.ocr-d.de}processor_unique_ID_2020_06_11T07_39_43'</prov:role>
+    </prov:wasGeneratedBy>
+    <prov:wasGeneratedBy>
+        <prov:entity prov:ref="ocrd:unique__ID__OCR__D__IMG__CROP"/>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__37"/>
+        <prov:role xsi:type="xsd:string">'ocrd:{http://www.ocr-d.de}processor_unique_ID_2020_06_11T07_39_43'</prov:role>
+    </prov:wasGeneratedBy>
+    <prov:wasGeneratedBy>
+        <prov:entity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0002"/>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__37"/>
+        <prov:role xsi:type="xsd:string">'ocrd:{http://www.ocr-d.de}processor_unique_ID_2020_06_11T07_39_43'</prov:role>
+    </prov:wasGeneratedBy>
+    <prov:wasGeneratedBy>
+        <prov:entity prov:ref="ocrd:unique__ID__OCR__D__BIN"/>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__27"/>
+        <prov:role xsi:type="xsd:string">'ocrd:{http://www.ocr-d.de}processor_unique_ID_2020_06_11T07_39_36'</prov:role>
+    </prov:wasGeneratedBy>
+    <prov:wasGeneratedBy>
+        <prov:entity prov:ref="ocrd:unique__ID__OCR__D__IMG__BIN"/>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__27"/>
+        <prov:role xsi:type="xsd:string">'ocrd:{http://www.ocr-d.de}processor_unique_ID_2020_06_11T07_39_36'</prov:role>
+    </prov:wasGeneratedBy>
+    <prov:wasGeneratedBy>
+        <prov:entity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0001"/>
+        <prov:activity prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__27"/>
+        <prov:role xsi:type="xsd:string">'ocrd:{http://www.ocr-d.de}processor_unique_ID_2020_06_11T07_39_36'</prov:role>
+    </prov:wasGeneratedBy>
+    <prov:wasDerivedFrom>
+        <prov:generatedEntity prov:ref="ocrd:unique__ID__OCR__D__SEG__REGION"/>
+        <prov:usedEntity prov:ref="ocrd:unique__ID__OCR__D__CROP"/>
+    </prov:wasDerivedFrom>
+    <prov:wasDerivedFrom>
+        <prov:generatedEntity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0003"/>
+        <prov:usedEntity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0002"/>
+    </prov:wasDerivedFrom>
+    <prov:wasDerivedFrom>
+        <prov:generatedEntity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0002"/>
+        <prov:usedEntity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0001"/>
+    </prov:wasDerivedFrom>
+    <prov:wasDerivedFrom>
+        <prov:generatedEntity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0001"/>
+        <prov:usedEntity prov:ref="ocrd:unique__ID__mets__xml__1591861167366__0000"/>
+    </prov:wasDerivedFrom>
+    <prov:wasAssociatedWith prov:id="ocrd:agent__workflow__unique__ID__2020__06__11T07__39__27">
+        <prov:activity prov:ref="ocrd:workflow__unique__ID__2020__06__11T07__39__27"/>
+        <prov:agent prov:ref="ocrd:Execute__Taverna__OCR__D__Workflow"/>
+    </prov:wasAssociatedWith>
+    <prov:wasStartedBy prov:id="ocrd:taverna__workflow__unique__ID__2020__06__11T07__39__27">
+        <prov:activity prov:ref="ocrd:workflow__unique__ID__2020__06__11T07__39__27"/>
+        <prov:trigger prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__44"/>
+    </prov:wasStartedBy>
+    <prov:wasStartedBy prov:id="ocrd:taverna__workflow__unique__ID__2020__06__11T07__39__27">
+        <prov:activity prov:ref="ocrd:workflow__unique__ID__2020__06__11T07__39__27"/>
+        <prov:trigger prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__37"/>
+    </prov:wasStartedBy>
+    <prov:wasStartedBy prov:id="ocrd:taverna__workflow__unique__ID__2020__06__11T07__39__27">
+        <prov:activity prov:ref="ocrd:workflow__unique__ID__2020__06__11T07__39__27"/>
+        <prov:trigger prov:ref="ocrd:processor__unique__ID__2020__06__11T07__39__27"/>
+    </prov:wasStartedBy>
+</prov:document>

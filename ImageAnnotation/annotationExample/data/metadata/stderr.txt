@@ -1,0 +1,30 @@
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ocrd-olena-binarize --mets /data/workspace/annotationExample/data/mets.xml --working-dir /data/workspace/annotationExample/data --input-file-grp OCR-D-IMG --output-file-grp OCR-D-BIN,OCR-D-IMG-BIN --parameter {"impl":"sauvola"} --log-level ERROR
+07:39:31.635 INFO ocrd-olena-binarize - processing image/png input file OCR-D-IMG_annotationExample-1 (P_annotationExample-1)
+07:39:32.702 INFO ocrd.workspace - Saving mets '/data/workspace/annotationExample/data/mets.xml'
+07:39:33.765 INFO ocrd.workspace - Saving mets '/data/workspace/annotationExample/data/mets.xml'
+07:39:33.819 INFO ocrd-olena-binarize - processing image/png input file OCR-D-IMG_annotationExample-2 (P_annotationExample-2)
+07:39:34.827 INFO ocrd.workspace - Saving mets '/data/workspace/annotationExample/data/mets.xml'
+07:39:35.843 INFO ocrd.workspace - Saving mets '/data/workspace/annotationExample/data/mets.xml'
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ocrd-anybaseocr-crop --mets /data/workspace/annotationExample/data/mets.xml --working-dir /data/workspace/annotationExample/data --input-file-grp OCR-D-BIN --output-file-grp OCR-D-CROP,OCR-D-IMG-CROP --log-level ERROR
+07:39:38.953 INFO matplotlib.font_manager - generated new fontManager
+Using TensorFlow backend.
+07:39:42.979 WARNING tensorflow - From /usr/lib/python3.6/site-packages/tensorflow_core/python/compat/v2_compat.py:68: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+07:39:43.084 INFO root - Overriding log level globally to ERROR
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ocrd-tesserocr-segment-region --mets /data/workspace/annotationExample/data/mets.xml --working-dir /data/workspace/annotationExample/data --input-file-grp OCR-D-CROP --output-file-grp OCR-D-SEG-REGION --log-level ERROR
+07:39:45.583 INFO root - Overriding log level globally to ERROR
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ocrd zip bag -d /data/workspace/annotationExample/data -i unique ID -D full /data/workspace/annotationExample/data/taverna_1591861167366.ocrd.zip
+Usage: ocrd zip bag [OPTIONS] [DEST]
+Try 'ocrd zip bag --help' for help.
+
+Error: Got unexpected extra argument (/data/workspace/annotationExample/data/taverna_1591861167366.ocrd.zip)
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+curl -u ingest:ingest -v -F file=@taverna_1591861167366.ocrd.zip
+Warning: setting file taverna_1591861167366.ocrd.zip  failed!
+curl: no URL specified!
+curl: try 'curl --help' or 'curl --manual' for more information

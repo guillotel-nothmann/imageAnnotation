@@ -23,8 +23,19 @@ cd ImageAnnotation/src
 python3 main.py
 ```
 
-Once launched, open a METS file that points to page regions via PAGE files with image urls. Parts can be annotated using the buttons or the following key combinations: 
+Once launched, open a METS file that points to page regions via PAGE files with image urls. 
 
+Use the following commands to navigate and to edit:
+* Double click on the polygon region to display its basic information. Select a polygon and press "+": to edit its information. 
+* Zoom: shift+mouse selection
+* Unzoom: control + mouse click.
+* Next page: "right"
+* Previous page "left"
+* Save: "command+S"
+* Open: "command+O"
+
+
+Polygon regions can be added using the buttons or the following key combinations: 
 * "shift+C": caption
 * "shift+D": drop capital
 * "shift+F": footer
@@ -42,13 +53,21 @@ Once launched, open a METS file that points to page regions via PAGE files with 
 * "shift+T": tablature notation
 * "ctrl+t": table
 
-Double click on the polygon to display its basic information. Select a polygon and press "+": to edit its information. 
 
-Zoom: shift+mouse selection
-Unzoom: control + mouse click.
 
-Save: "command+S"
-Open: "command+O"
+
+## Example
+Run TMGImageAnnotation:
+
+
+```bash
+cd ImageAnnotation/src 
+python3 main.py
+```
+Open the mets.xml file located in the followin folder: "/ImageAnnotation/annotationExample".
+You should see the following example and should be able to edit its region annotation.
+
+[ImageAnnotationExample](annotationExample/annotationExemple.png)
           
 
 ## Contributing

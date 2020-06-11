@@ -1,0 +1,10 @@
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ocrd-olena-binarize --mets /data/workspace/annotationExample/data/mets.xml --working-dir /data/workspace/annotationExample/data --input-file-grp OCR-D-IMG --output-file-grp OCR-D-BIN,OCR-D-IMG-BIN --parameter {"impl":"sauvola"} --log-level ERROR
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ocrd-anybaseocr-crop --mets /data/workspace/annotationExample/data/mets.xml --working-dir /data/workspace/annotationExample/data --input-file-grp OCR-D-BIN --output-file-grp OCR-D-CROP,OCR-D-IMG-CROP --log-level ERROR
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ocrd-tesserocr-segment-region --mets /data/workspace/annotationExample/data/mets.xml --working-dir /data/workspace/annotationExample/data --input-file-grp OCR-D-CROP --output-file-grp OCR-D-SEG-REGION --log-level ERROR
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ocrd zip bag -d /data/workspace/annotationExample/data -i unique ID -D full /data/workspace/annotationExample/data/taverna_1591861167366.ocrd.zip
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+curl -u ingest:ingest -v -F file=@taverna_1591861167366.ocrd.zip

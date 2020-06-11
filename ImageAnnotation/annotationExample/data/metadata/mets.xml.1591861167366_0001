@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="info:lc/xmlns/premis-v2 http://www.loc.gov/standards/premis/v2/premis-v2-0.xsd http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version17/mets.v1-7.xsd http://www.loc.gov/mix/v10 http://www.loc.gov/standards/mix/mix10/mix10.xsd">
+  <mets:metsHdr CREATEDATE="2020-06-11T09:39:08.550353">
+    <mets:agent TYPE="OTHER" OTHERTYPE="SOFTWARE" ROLE="CREATOR">
+      <mets:name>ocrd/core v2.4.4</mets:name>
+    </mets:agent>
+  </mets:metsHdr>
+  <mets:structMap TYPE="PHYSICAL">
+    <mets:div TYPE="physSequence">
+      <mets:div TYPE="page" ID="P_annotationExample-1">
+        <mets:fptr FILEID="OCR-D-IMG_annotationExample-1"/>
+        <mets:fptr FILEID="OCR-D-BIN_annotationExample-1-BIN_sauvola"/>
+        <mets:fptr FILEID="OCR-D-BIN_annotationExample-1"/>
+      </mets:div>
+      <mets:div TYPE="page" ID="P_annotationExample-2">
+        <mets:fptr FILEID="OCR-D-IMG_annotationExample-2"/>
+        <mets:fptr FILEID="OCR-D-BIN_annotationExample-2-BIN_sauvola"/>
+        <mets:fptr FILEID="OCR-D-BIN_annotationExample-2"/>
+      </mets:div>
+    </mets:div>
+  </mets:structMap>
+  <mets:dmdSec ID="DMDLOG_0001">
+    <mets:mdWrap MDTYPE="MODS">
+      <mets:xmlData>
+        <mods:mods xmlns:mods="http://www.loc.gov/mods/v3">
+          <mods:identifier type="purl">unique ID</mods:identifier>
+        </mods:mods>
+      </mets:xmlData>
+    </mets:mdWrap>
+  </mets:dmdSec>
+  <mets:amdSec ID="AMD">
+    </mets:amdSec>
+  <mets:fileSec>
+    <mets:fileGrp USE="OCR-D-IMG">
+      <mets:file MIMETYPE="image/png" ID="OCR-D-IMG_annotationExample-1">
+        <mets:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="FILE" xlink:href="OCR-D-IMG/annotationExample-1.png"/>
+      </mets:file>
+      <mets:file MIMETYPE="image/png" ID="OCR-D-IMG_annotationExample-2">
+        <mets:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="FILE" xlink:href="OCR-D-IMG/annotationExample-2.png"/>
+      </mets:file>
+    </mets:fileGrp>
+    <mets:fileGrp USE="OCR-D-IMG-BIN">
+      <mets:file MIMETYPE="image/png" ID="OCR-D-BIN_annotationExample-1-BIN_sauvola">
+        <mets:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="FILE" xlink:href="OCR-D-IMG-BIN/OCR-D-BIN_annotationExample-1-BIN_sauvola.png"/>
+      </mets:file>
+      <mets:file MIMETYPE="image/png" ID="OCR-D-BIN_annotationExample-2-BIN_sauvola">
+        <mets:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="FILE" xlink:href="OCR-D-IMG-BIN/OCR-D-BIN_annotationExample-2-BIN_sauvola.png"/>
+      </mets:file>
+    </mets:fileGrp>
+    <mets:fileGrp USE="OCR-D-BIN">
+      <mets:file MIMETYPE="application/vnd.prima.page+xml" ID="OCR-D-BIN_annotationExample-1">
+        <mets:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="FILE" xlink:href="OCR-D-BIN/OCR-D-BIN_annotationExample-1.xml"/>
+      </mets:file>
+      <mets:file MIMETYPE="application/vnd.prima.page+xml" ID="OCR-D-BIN_annotationExample-2">
+        <mets:FLocat LOCTYPE="OTHER" OTHERLOCTYPE="FILE" xlink:href="OCR-D-BIN/OCR-D-BIN_annotationExample-2.xml"/>
+      </mets:file>
+    </mets:fileGrp>
+  </mets:fileSec>
+</mets:mets>
