@@ -67,7 +67,7 @@ python3 main.py
 Open the mets.xml file located in the followin folder: "/ImageAnnotation/annotationExample".
 You should see the following example and should be able to edit its region annotation.
 
-[ImageAnnotationExample](annotationExample/annotationExemple.png)
+![ImageAnnotationExample](https://github.com/guillotel-nothmann/imageAnnotation/blob/master/ImageAnnotation/annotationExample/annotationExemple.png?raw=true)
           
 
 ## Contributing
