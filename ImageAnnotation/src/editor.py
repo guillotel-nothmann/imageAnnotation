@@ -167,6 +167,21 @@ class Editor ():
         
         
     def addPolyGon (self, xyArray): 
+        
+        ''' make sure that coordinates imply a surface and do not correspond to as single point '''
+        isSurface = False
+        firstX= xyArray[0][0]
+        firstY= xyArray[0][1]
+        for coordinates in xyArray:
+            if coordinates [0] != firstX or coordinates [1] != firstY: 
+                isSurface = True
+                break
+        if isSurface == False:  
+            self.ax.figure.canvas.draw_idle() 
+            return
+            
+                
+        
         polygon = self.createPolygon(self.boxType, xyArray)
         self.ax.add_patch(polygon) 
         textRegion = TextRegion(
@@ -301,6 +316,7 @@ class Editor ():
                     self.ax.figure.canvas.draw_idle()  
                     
         elif event.key in ["P", "H", "C", "ctrl+h", "F", "D", "M", "F", "O", "S", "T", "ctrl+t", "G", "I", "ctrl+l"] :
+       
             self.ax.editor.boxTriggered = True
             self.ax.editor.setCursor()   
             if event.key == "P": self.ax.editor.boxType = "paragraph"
@@ -421,8 +437,7 @@ class Editor ():
         self.pageFileList = self.metsData.getFileGroup()
         
         ''' load first page '''
-        self.loadPage(self.imageIndex)
-        print (filename) 
+        self.loadPage(self.imageIndex) 
    
     def previousPage(self): 
         if self.imageIndex > (0):
@@ -431,8 +446,7 @@ class Editor ():
             self.imageIndex = self.imageIndex-1
             self.loadPage(self.imageIndex)
             
-    def save(self):
-        print ("save")
+    def save(self): 
         self.ax.editor.updateRegionData()
         self.ax.editor.pageXML.writePageRegionXML(self.ax.polygonInteractorList) 
         self.unsaved(False)
@@ -460,6 +474,23 @@ class Editor ():
         self.annot.get_bbox_patch().set_alpha(1)
     
     def updateRegionData (self):
+        
+        ''' make sure that all interactors with 0 coordinates are deleted ''' 
+        temporaryList = []
+        for polyInt in self.ax.polygonInteractorList:
+            isNullCoordinates = True
+            for coordinates in (polyInt.poly.xy): 
+                for coordinate in coordinates:
+                    if coordinate != 0: 
+                        temporaryList.append(polyInt)
+                        isNullCoordinates = False 
+                        break
+                if isNullCoordinates == False: break
+        self.ax.polygonInteractorList = temporaryList
+        ''' make sure that all interactors with 0 coordinates are deleted ''' 
+        
+        
+        
         
         ''' update region indices '''
         for polyInt in self.ax.polygonInteractorList: polyInt.ocrRegion.index =  polyInt.ocrRegion.index
@@ -510,7 +541,7 @@ class Editor ():
             self.ax.editor.setCursor()
             
     class DeleteBox (ToolBase):
-        default_keymap = 'D'
+        default_keymap = ''
         description = 'Delete a box'
         def __init__(self, *args, gid, **kwargs):
             self.triggered = False
@@ -660,8 +691,7 @@ class Editor ():
         def __init__(self, *args, gid, **kwargs): 
             super().__init__(*args, **kwargs) 
             self.ax = args[0].figure.axes[0] 
-        def trigger(self, *args, **kwargs):
-            print ("open")
+        def trigger(self, *args, **kwargs): 
             self.ax.editor.openFile()
     
     class OtherBox(ToolBase):
