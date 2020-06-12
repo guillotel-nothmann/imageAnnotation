@@ -1,7 +1,7 @@
-# ImageAnnotation
+# TMG_ImageAnnotation
 
-TMGImageAnnotation is a Python module for viewing and editing OCR outputs and segmentation ground truth. The software is developed in the context of the project [Thesaurus Musicarum Germanicarum](http://tmg.huma-num.fr/), dedicated to  printed music theory of the modern era (1470-1750). The viewer shows the page layout as a transparent overlay on the document image. Text regions  (paragraphs, headins, captions, drop capitals, graphics, music examples, etc.) are displayed as tooltips and can be edited.
-TMGImageAnnotation takes [METS-data](http://www.loc.gov/standards/mets/) as input and stores image annotations in the [PAGE XML](https://github.com/PRImA-Research-Lab/PAGE-XML/wiki) format. The project is designed to be embedded in the [OCR-D](https://ocr-d.de/) initiative. It aims to improve the page segmentation step that remains critical in OCR workflows for historical sources.
+TMG_ImageAnnotation is a Python module for viewing and editing OCR outputs and segmentation ground truth. The software is developed in the context of the project [Thesaurus Musicarum Germanicarum](http://tmg.huma-num.fr/), dedicated to  printed music theory of the modern era (1470-1750). The viewer shows the page layout as a transparent overlay on the document image. Text regions  (paragraphs, headins, captions, drop capitals, graphics, music examples, etc.) are displayed as tooltips and can be edited.
+TMG_ImageAnnotation takes [METS-data](http://www.loc.gov/standards/mets/) as input and stores image annotations in the [PAGE XML](https://github.com/PRImA-Research-Lab/PAGE-XML/wiki) format. The project is designed to be embedded in the [OCR-D](https://ocr-d.de/) initiative. It aims to improve especially the page segmentation step that remains critical in OCR workflows for historical sources.
 
 
 ## Installation
