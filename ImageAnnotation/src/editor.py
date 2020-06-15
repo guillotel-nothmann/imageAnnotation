@@ -305,9 +305,9 @@ class Editor ():
             self.imageIndex = self.imageIndex+1
             self.loadPage(self.imageIndex) 
             
-    def on_key(self, event): 
-        print (event.key)
-          
+    def on_key(self, event):  
+        
+        print (event.key) 
         if event.key == "backspace": ### remove polygons  
             for polygonInteractor in self.ax.polygonInteractorList:
                 if polygonInteractor.showverts == True: 
@@ -324,7 +324,7 @@ class Editor ():
             if event.key == "P": self.ax.editor.boxType = "paragraph"
             elif event.key == "H": self.ax.editor.boxType = "heading"
             elif event.key == "C": self.ax.editor.boxType = "caption"
-            elif event.key == "alt+h": self.ax.editor.boxType = "header"
+            elif event.key == "ctrl+h": self.ax.editor.boxType = "header"
             elif event.key == "F": self.ax.editor.boxType = "footer"
             elif event.key == "D": self.ax.editor.boxType = "drop-capital"
             elif event.key == "M": self.ax.editor.boxType = "marginalia"
@@ -332,14 +332,18 @@ class Editor ():
             elif event.key == "O": self.ax.editor.boxType = "other"
             
             elif event.key == "S": self.ax.editor.boxType = "staffNotation"
-            elif event.key == "alt+s": self.ax.editor.boxType = "separator"
+            elif event.key == "ctrl+s": self.ax.editor.boxType = "separator"
             elif event.key == "T": self.ax.editor.boxType = "tablatureNotation"
-            elif event.key == "alt+t": self.ax.editor.boxType = "table"
+            elif event.key == "ctrl+t": self.ax.editor.boxType = "table"
             elif event.key == "G": self.ax.editor.boxType = "graphic"
             elif event.key == "I": self.ax.editor.boxType = "image"
-            elif event.key == "alt+l": self.ax.editor.boxType = "linedrawing"   
-        elif event.key == "alt+s": self.save() 
-        elif event.key == "alt+o": self.openFile()  
+            elif event.key == "ctrl+l" : 
+                
+                self.ax.editor.boxType = "linedrawing"   
+        elif event.key == "super+s" or event.key == "alt+s" : 
+            self.save() 
+        elif event.key == "super+o" or event.key == "alt+o": 
+            self.openFile()  
         elif event.key == "left": self.previousPage()
         elif event.key == "right": self.nextPage() 
         elif event.key =="+":  
