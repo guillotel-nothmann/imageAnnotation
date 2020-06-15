@@ -26,13 +26,18 @@ python3 main.py
 Once launched, open a METS file that points to page regions via PAGE files with image urls. 
 
 Use the following commands to navigate and to edit:
-* Double click on the polygon region to display its basic information. Select a polygon and press "+": to edit its information. 
+* Display polygon information: right click on the polygon 
+* Edit polygon information: select a polygon and press "+" 
+* Add coordinates: click on the polygon lines and press "i"
+* Delete coordinates: click on a polygon point and press "d"
+
+
 * Zoom: shift+mouse selection
-* Unzoom: control + mouse click.
+* Unzoom: control + mouse click
 * Next page: "right"
-* Previous page "left"
-* Save: "command+S"
-* Open: "command+O"
+* Previous page: "left"
+* Save: mac: "command+S", windows: alt+s
+* Open: mac: "command+O", windows: alt+o
 
 
 Polygon regions can be added using the buttons or the following key combinations: 

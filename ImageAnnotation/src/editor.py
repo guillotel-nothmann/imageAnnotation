@@ -306,8 +306,6 @@ class Editor ():
             self.loadPage(self.imageIndex) 
             
     def on_key(self, event):  
-        
-        print (event.key) 
         if event.key == "backspace": ### remove polygons  
             for polygonInteractor in self.ax.polygonInteractorList:
                 if polygonInteractor.showverts == True: 
