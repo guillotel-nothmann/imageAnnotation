@@ -13,7 +13,11 @@ pip3 install numpy
 pip3 install lxml
 pip3 install matplotlib
 ```
-Download or clone this project and run main.py.
+Download or clone this project.
+
+```bash
+git clone https://github.com/guillotel-nothmann/imageAnnotation.git
+```
 
 ## Usage
 

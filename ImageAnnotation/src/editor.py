@@ -482,6 +482,12 @@ class Editor ():
         ''' make sure that all interactors with 0 coordinates are deleted ''' 
         temporaryList = []
         for polyInt in self.ax.polygonInteractorList:
+            
+            ''' make sure that all interactors which only have one coordinates point are deleted '''
+            if len (polyInt.poly.xy) == 1:  
+                continue
+                
+            
             isNullCoordinates = True
             for coordinates in (polyInt.poly.xy): 
                 for coordinate in coordinates:
@@ -490,10 +496,7 @@ class Editor ():
                         isNullCoordinates = False 
                         break
                 if isNullCoordinates == False: break
-        self.ax.polygonInteractorList = temporaryList
-        ''' make sure that all interactors with 0 coordinates are deleted ''' 
-        
-        
+        self.ax.polygonInteractorList = temporaryList 
         
         
         ''' update region indices '''
@@ -1122,11 +1125,19 @@ class ReadWritePageXML(object):
                 if "id" in regionClass.attrib: regionId = regionClass.attrib["id"]
                 if "type" in regionClass.attrib: regionType = regionClass.attrib["type"]
                 if "custom" in regionClass.attrib: custom = regionClass.attrib["custom"]
-                 
+     
+                
+                
+                
                 for coordinates in regionClass:
                     if coordinates.tag == self.pcNameEntry+"Coords":
                         if "points" in coordinates.attrib: 
                             coordsStringList = coordinates.attrib["points"].split(" ") 
+                            
+                            if len (coordsStringList) <= 1:  break # make sure that the region as at least two coordinates
+                                
+    
+                                
                             coordinatesList = []
                             for coordinateString in coordsStringList: 
                                 coordinatesList.append([int(i) for i in coordinateString.split(",")] )
