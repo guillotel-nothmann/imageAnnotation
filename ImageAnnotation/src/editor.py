@@ -937,7 +937,7 @@ class PolygonInteractor(object):
                     self.clearCoordinates() 
                     self.ax.polygonInteractorList.remove(self)  
                     self.ax.editor.unsaved()
-                    self.ax.figure.canvas.draw_idle()  
+                    self.ax.figure.canvas.draw_idle()   
                     
                 
                 
