@@ -928,11 +928,18 @@ class PolygonInteractor(object):
                 self._ind = None
         elif event.key == 'd':
             ind = self.get_ind_under_point(event)
-            if ind is not None:
+            if ind is not None : 
+                if len(self.poly.xy) >2: ### check if more than 1 point  
+                    self.poly.xy = np.delete(self.poly.xy,ind, axis=0)
+                    self.line.set_data(zip(*self.poly.xy))
+                    
+                else:  ## if only one point  kill polygon
+                    self.clearCoordinates() 
+                    self.ax.polygonInteractorList.remove(self)  
+                    self.ax.editor.unsaved()
+                    self.ax.figure.canvas.draw_idle() 
+                    
                 
-                self.poly.xy = np.delete(self.poly.xy,
-                                         ind, axis=0)
-                self.line.set_data(zip(*self.poly.xy))
                 
         elif event.key == 'i':
             xys = self.poly.get_transform().transform(self.poly.xy)
