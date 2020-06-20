@@ -30,6 +30,7 @@ python3 main.py
 Once launched, open a METS file that points to page regions via PAGE files with image urls. 
 
 Use the following commands to navigate and to edit:
+* Quit : "ctrl+q"
 * Open: mac: "command+O", windows: alt+o
 * Save: mac: "command+S", windows: alt+s
 * Display polygon information: right click on the polygon 
@@ -61,9 +62,8 @@ Polygon regions can be added using the buttons or the following key combinations
 * "ctrl+s": separator
 * "shift+S": staff notation
 * "shift+T": tablature notation
-* "ctrl+t": table
-
-
+* "ctrl+t": table 
+* "shift+Z": list
 
 
 ## Example

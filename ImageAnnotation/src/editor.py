@@ -68,6 +68,7 @@ class Editor ():
                             "image": (0.46,0.67,0.19,0.2),
                             "linedrawing": (0.30,0.75,0.93,0.2), 
                             "separator": (0,1,0,0.2),
+                            "list": (1,1,0,0.2),
                             "other": (0,1,0,0.2) 
                             }
         self.regionDictionary = []
@@ -90,6 +91,7 @@ class Editor ():
         
         
         ''' save, open....'''
+        self.toolmanager.add_tool('Quit', self.QuitBox, gid='saveOpen')
         self.toolmanager.add_tool('Open', self.OpenBox, gid='saveOpen') 
         self.toolmanager.add_tool('Save', self.SaveBox, gid='saveOpen') 
         self.toolmanager.add_tool('Previous', self.Previous, gid='saveOpen') 
@@ -104,6 +106,7 @@ class Editor ():
         self.toolmanager.add_tool('Drop-capital', self.DropCapitalBox, gid='textAreaGroup')
         self.toolmanager.add_tool('Marginalia', self.MarginaliaBox, gid='textAreaGroup')
         self.toolmanager.add_tool('Footnote', self.FootnoteBox, gid='textAreaGroup')
+        self.toolmanager.add_tool('List', self.ListBox, gid='textAreaGroup')
         
         ''' 2. Music regions '''
         self.toolmanager.add_tool('Staff notation', self.StaffNotationBox, gid='musicAreaGroup')
@@ -135,6 +138,7 @@ class Editor ():
         
         
         
+        self.fig.canvas.manager.toolbar.add_tool('Quit', '', 1) 
         self.fig.canvas.manager.toolbar.add_tool('Open', '', 1) 
         self.fig.canvas.manager.toolbar.add_tool('Save', '', 1) 
         self.fig.canvas.manager.toolbar.add_tool('Previous', '', 1) 
@@ -148,6 +152,7 @@ class Editor ():
         self.fig.canvas.manager.toolbar.add_tool('Drop-capital', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('Marginalia', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('Footnote', '', 1)
+        self.fig.canvas.manager.toolbar.add_tool('List', '', 1)
         
         self.fig.canvas.manager.toolbar.add_tool('Staff notation', '', 1) 
         self.fig.canvas.manager.toolbar.add_tool('Tablature notation', '', 1)
@@ -228,6 +233,8 @@ class Editor ():
             polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["linedrawing"], ec=(0,0,0,1), picker=5) 
         elif regionName == "separator":
             polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["separator"], ec=(0,0,0,1), picker=5) 
+        elif regionName == "list":
+            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["list"], ec=(0,0,0,1), picker=5)
         else:  
             polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["other"], ec=(0,0,0,1), picker=5)
         polygon.regionName = regionName 
@@ -306,6 +313,9 @@ class Editor ():
             self.loadPage(self.imageIndex) 
             
     def on_key(self, event):  
+        
+        print (event.key)
+        
         if event.key == "backspace": ### remove polygons  
             for polygonInteractor in self.ax.polygonInteractorList:
                 if polygonInteractor.showverts == True: 
@@ -315,7 +325,7 @@ class Editor ():
                     self.unsaved()
                     self.ax.figure.canvas.draw_idle()  
                     
-        elif event.key in ["P", "H", "C", "ctrl+h", "F", "D", "M", "F", "O", "S", "T", "ctrl+t", "G", "I", "ctrl+l"] :
+        elif event.key in ["P", "H", "C", "ctrl+h", "F", "D", "M", "F", "O", "S", "T", "ctrl+t", "G", "I", "ctrl+l", "Z"] :
        
             self.ax.editor.boxTriggered = True
             self.ax.editor.setCursor()   
@@ -328,6 +338,7 @@ class Editor ():
             elif event.key == "M": self.ax.editor.boxType = "marginalia"
             elif event.key == "F": self.ax.editor.boxType = "footnote"
             elif event.key == "O": self.ax.editor.boxType = "other"
+            elif event.key == "Z": self.ax.editor.boxType = "list"
             
             elif event.key == "S": self.ax.editor.boxType = "staffNotation"
             elif event.key == "ctrl+s": self.ax.editor.boxType = "separator"
@@ -341,7 +352,11 @@ class Editor ():
         elif event.key == "super+s" or event.key == "alt+s" : 
             self.save() 
         elif event.key == "super+o" or event.key == "alt+o": 
-            self.openFile()  
+            self.openFile() 
+            
+        elif event.key == "ctrl+q": 
+            print ("quint")
+            self.quit()   
         elif event.key == "left": self.previousPage()
         elif event.key == "right": self.nextPage() 
         elif event.key =="+":  
@@ -450,6 +465,16 @@ class Editor ():
             self.imageIndex = self.imageIndex-1
             self.loadPage(self.imageIndex)
             
+    def quit (self):
+        print (self.unsavedChanges)
+        
+        if self.unsavedChanges: 
+                if messagebox.askyesno("Question","Save changes ?") == True: 
+                    self.save()     
+                    plt.close("all")
+                else: plt.close("all")
+        else: plt.close("all")
+            
     def save(self): 
         self.ax.editor.updateRegionData()
         self.ax.editor.pageXML.writePageRegionXML(self.ax.polygonInteractorList) 
@@ -521,6 +546,11 @@ class Editor ():
                 region.regionClass = "MusicRegion" 
                 region.custom = region.regionName
                 region.type = None
+                
+            elif region.regionName == "list":
+                region.regionClass = "TextRegion" 
+                region.custom = region.regionName 
+                
                 
             elif region.regionName in ["table", "graphic", "image", "linedrawing", "separator"]:
                 region.custom = None
@@ -669,6 +699,20 @@ class Editor ():
             self.ax.editor.boxType = "linedrawing"
             self.ax.editor.setCursor()
             
+            
+    class ListBox(ToolBase):
+        default_keymap = ''
+        description = 'Add a list'
+        def __init__(self, *args, gid, **kwargs):
+            self.ax = args[0].figure.axes[0]
+            self.ax.editor.boxTriggered = False
+            super().__init__(*args, **kwargs) 
+
+        def trigger(self, *args, **kwargs):          
+            self.ax.editor.boxTriggered = True
+            self.ax.editor.boxType = "list"
+            self.ax.editor.setCursor()
+            
     class MarginaliaBox(ToolBase):
         default_keymap = ''
         description = 'Identify marginalia'
@@ -726,6 +770,18 @@ class Editor ():
             self.ax.editor.boxTriggered = True
             self.ax.editor.boxType = "paragraph"
             self.ax.editor.setCursor() 
+            
+            
+    class QuitBox(ToolBase): 
+        default_keymap = ''
+        description = 'Identify a paragraph'
+        def __init__(self, *args, gid, **kwargs):
+
+            self.ax = args[0].figure.axes[0]
+            
+            super().__init__(*args, **kwargs)  
+        def trigger(self, *args, **kwargs):  
+            self.ax.editor.quit()
             
     class Previous(ToolBase): 
         default_keymap = ''
@@ -1219,8 +1275,14 @@ class TextRegion(object):
         if self.regionClass == "TextRegion":
             if self.type in ["paragraph", "caption", "header", "heading", "footer", "drop-capital", "marginalia", "footnote", "other"]:
                 self.regionName = self.type   
+            
+            elif self.custom in ["list"]:
+                self.regionName = self.custom
                 
+            
             else: self.regionName = "other"
+                
+                
         
         
         
