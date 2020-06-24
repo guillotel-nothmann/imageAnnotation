@@ -42,6 +42,8 @@ Use the following commands to navigate and to edit:
 * Unzoom: control + mouse click
 * Next page: "right"
 * Previous page: "left"
+* Next region: "down"
+* Previous region: "up"
 
 
 
