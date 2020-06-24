@@ -357,8 +357,7 @@ class Editor ():
         elif event.key == "super+o" or event.key == "alt+o": 
             self.openFile() 
             
-        elif event.key == "ctrl+q": 
-            print ("quint")
+        elif event.key == "ctrl+q":  
             self.quit()   
         elif event.key == "left": self.previousPage()
         elif event.key == "right": self.nextPage() 
@@ -387,6 +386,9 @@ class Editor ():
     def onclick(self, event):              
         self.onClick = True
         self.onRelease = False   
+        
+       
+        
         if self.boxTriggered == True :
             self.clickX = event.xdata
             self.clickY = event.ydata 
@@ -418,15 +420,18 @@ class Editor ():
             self.ax.figure.canvas.draw_idle() 
             
     def onpick (self,event): 
-        self.ax.figure.canvas.draw_idle()
+        self.annot.set_visible(False)
+        
+        
         for polygonIndex, polyInteractor in enumerate (self.ax.polygonInteractorList):
             polyInteractor.showverts = False
             polyInteractor.line.set_visible(polyInteractor.showverts) 
             if polyInteractor.poly == event.artist:
                 polyInteractor.showverts = True
                 polyInteractor.line.set_visible(polyInteractor.showverts)
-                self.currentPolygonIndex = polygonIndex
-                print (self.currentPolygonIndex)  
+                self.currentPolygonIndex = polygonIndex  
+                
+        self.ax.figure.canvas.draw_idle()
                 
     def onrelease (self, event):
         self.onClick = False
@@ -476,9 +481,7 @@ class Editor ():
             self.imageIndex = self.imageIndex-1
             self.loadPage(self.imageIndex)
             
-    def quit (self):
-        print (self.unsavedChanges)
-        
+    def quit (self): 
         if self.unsavedChanges: 
                 if messagebox.askyesno("Question","Save changes ?") == True: 
                     self.save()     
@@ -493,8 +496,7 @@ class Editor ():
         self.fig.canvas.draw_idle()
         
     
-    def selectPolygon (self, polygonIndex = 0): 
-        print (polygonIndex)
+    def selectPolygon (self, polygonIndex = 0):  
         for polyCounter, polyInteractor in enumerate (self.ax.polygonInteractorList):
             polyInteractor.showverts = False
             polyInteractor.line.set_visible(polyInteractor.showverts) 
@@ -502,6 +504,8 @@ class Editor ():
                 polyInteractor.showverts = True
                 polyInteractor.line.set_visible(polyInteractor.showverts)
                 self.currentPolygonIndex = polygonIndex
+                self.update_annot(polyInteractor) 
+                self.annot.set_visible(True)
         self.ax.figure.canvas.draw_idle()
     
     def setCursor (self):
@@ -509,6 +513,7 @@ class Editor ():
             polyInteractor.showverts = False
             polyInteractor.line.set_visible(polyInteractor.showverts)
         self.cursor = Cursor(self.ax, useblit=False, color='black', linewidth=1) 
+    
     
     def unsaved (self, isUnsaved= True):
         if isUnsaved:
@@ -1239,6 +1244,11 @@ class ReadWritePageXML(object):
                             
                             self.textRegionList.append(TextRegion(coordinatesList, regionId, regionIndex, regionType, regionClass.tag.replace(self.pcNameEntry, ""), custom))
   
+        ''' sort text regions accordin to index'''
+        
+        self.textRegionList = sorted(self.textRegionList, key=lambda textRegion: textRegion.index)
+        
+        
         return self.textRegionList
     
     
