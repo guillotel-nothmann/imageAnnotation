@@ -42,6 +42,7 @@ class Editor ():
         self.yMin = 0
         self.yMax = 0
         self.zoomFactor = 1.25
+        self.currentPolygonIndex = 0
         
         self.simpleChoixBox = SimpleChoiceBox()  
         ''' plot, ax, figure '''
@@ -312,6 +313,8 @@ class Editor ():
             self.imageIndex = self.imageIndex+1
             self.loadPage(self.imageIndex) 
             
+    
+    
     def on_key(self, event):  
         
         print (event.key)
@@ -359,6 +362,12 @@ class Editor ():
             self.quit()   
         elif event.key == "left": self.previousPage()
         elif event.key == "right": self.nextPage() 
+        elif event.key == "up": 
+            if self.currentPolygonIndex-1 >= 0: self.selectPolygon(self.currentPolygonIndex-1)
+
+        elif event.key == "down": 
+            if self.currentPolygonIndex+1 < len (self.ax.polygonInteractorList): self.selectPolygon(self.currentPolygonIndex+1)
+        
         elif event.key =="+":  
             for polygonInter in self.ax.polygonInteractorList: 
                 if polygonInter.showverts == True:   
@@ -410,12 +419,14 @@ class Editor ():
             
     def onpick (self,event): 
         self.ax.figure.canvas.draw_idle()
-        for polyInteractor in self.ax.polygonInteractorList:
+        for polygonIndex, polyInteractor in enumerate (self.ax.polygonInteractorList):
             polyInteractor.showverts = False
             polyInteractor.line.set_visible(polyInteractor.showverts) 
             if polyInteractor.poly == event.artist:
                 polyInteractor.showverts = True
-                polyInteractor.line.set_visible(polyInteractor.showverts)  
+                polyInteractor.line.set_visible(polyInteractor.showverts)
+                self.currentPolygonIndex = polygonIndex
+                print (self.currentPolygonIndex)  
                 
     def onrelease (self, event):
         self.onClick = False
@@ -480,6 +491,18 @@ class Editor ():
         self.ax.editor.pageXML.writePageRegionXML(self.ax.polygonInteractorList) 
         self.unsaved(False)
         self.fig.canvas.draw_idle()
+        
+    
+    def selectPolygon (self, polygonIndex = 0): 
+        print (polygonIndex)
+        for polyCounter, polyInteractor in enumerate (self.ax.polygonInteractorList):
+            polyInteractor.showverts = False
+            polyInteractor.line.set_visible(polyInteractor.showverts) 
+            if polyCounter == polygonIndex:
+                polyInteractor.showverts = True
+                polyInteractor.line.set_visible(polyInteractor.showverts)
+                self.currentPolygonIndex = polygonIndex
+        self.ax.figure.canvas.draw_idle()
     
     def setCursor (self):
         for polyInteractor in self.ax.polygonInteractorList:
@@ -1273,11 +1296,14 @@ class TextRegion(object):
         
         
         if self.regionClass == "TextRegion":
-            if self.type in ["paragraph", "caption", "header", "heading", "footer", "drop-capital", "marginalia", "footnote", "other"]:
+            if self.type in ["paragraph", "caption", "header", "heading", "footer", "drop-capital", "marginalia", "footnote"]:
                 self.regionName = self.type   
             
-            elif self.custom in ["list"]:
-                self.regionName = self.custom
+            elif self.type == "other":
+                if self.custom == "list":
+                    self.regionName = self.custom
+                else : 
+                    self.regionName = "other"
                 
             
             else: self.regionName = "other"
