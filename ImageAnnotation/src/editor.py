@@ -69,7 +69,7 @@ class Editor ():
                             "image": (0.46,0.67,0.19,0.2),
                             "linedrawing": (0.30,0.75,0.93,0.2), 
                             "separator": (0,1,0,0.2),
-                            "list": (1,1,0,0.2),
+                            "list": (1,1,0,0.2), 
                             "other": (0,1,0,0.2) 
                             }
         self.regionDictionary = []
