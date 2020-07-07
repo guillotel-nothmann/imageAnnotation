@@ -395,7 +395,7 @@ class Editor ():
         elif event.key == "super+o" or event.key == "alt+o": 
             self.openFile() 
             
-        elif event.key == "super+d":
+        elif event.key == "super+d" or event.key =="alt+d":
             
             self.detectRegions()    
         
