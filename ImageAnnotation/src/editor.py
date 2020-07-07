@@ -1,6 +1,7 @@
 import numpy as np
 import threading
 import matplotlib
+import analysis
 from matplotlib.lines import Line2D
 from matplotlib.artist import Artist 
 from matplotlib.backend_tools import ToolBase
@@ -11,6 +12,7 @@ import matplotlib.image as mpimg
 from lxml import etree as ET 
 import tkinter as tk 
 from tkinter import ttk, messagebox
+from analysis import RegionAnalysis
  
 
  
@@ -33,6 +35,12 @@ class Editor ():
         self.pageFolderPath = None   
         self.unsavedChanges = False
         
+        
+        ''' pageClass '''
+        self.regionAnalysis = analysis.RegionAnalysis()
+         
+        
+       
         
         ''' zoom and resolution '''
         self.imageXMax= 0
@@ -69,7 +77,8 @@ class Editor ():
                             "image": (0.46,0.67,0.19,0.2),
                             "linedrawing": (0.30,0.75,0.93,0.2), 
                             "separator": (0,1,0,0.2),
-                            "list": (1,1,0,0.2), 
+                            "list": (1,1,0,0.2),
+                            "linegroup": (0,1,1,0.2), 
                             "other": (0,1,0,0.2) 
                             }
         self.regionDictionary = []
@@ -108,6 +117,7 @@ class Editor ():
         self.toolmanager.add_tool('Marginalia', self.MarginaliaBox, gid='textAreaGroup')
         self.toolmanager.add_tool('Footnote', self.FootnoteBox, gid='textAreaGroup')
         self.toolmanager.add_tool('List', self.ListBox, gid='textAreaGroup')
+        self.toolmanager.add_tool('LineGroup', self.LineGroupBox, gid='textAreaGroup')
         
         ''' 2. Music regions '''
         self.toolmanager.add_tool('Staff notation', self.StaffNotationBox, gid='musicAreaGroup')
@@ -124,7 +134,7 @@ class Editor ():
         self.toolmanager.add_tool('Other', self.OtherBox, gid='textAreaGroup') 
         self.toolmanager.add_tool('Delete box', self.DeleteBox, gid='deleteBoxGroup') 
         
-    
+   
         
          
         ''' add everything to toolbar '''
@@ -154,6 +164,7 @@ class Editor ():
         self.fig.canvas.manager.toolbar.add_tool('Marginalia', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('Footnote', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('List', '', 1)
+        self.fig.canvas.manager.toolbar.add_tool('LineGroup', '', 1)
         
         self.fig.canvas.manager.toolbar.add_tool('Staff notation', '', 1) 
         self.fig.canvas.manager.toolbar.add_tool('Tablature notation', '', 1)
@@ -167,6 +178,10 @@ class Editor ():
         if callable(plt.get_current_fig_manager):
             figManager = plt.get_current_fig_manager()
             if callable (figManager.full_screen_toggle): figManager.full_screen_toggle()
+        
+        
+        
+        
         
         ''' show plot '''
         plt.show()  
@@ -236,10 +251,34 @@ class Editor ():
             polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["separator"], ec=(0,0,0,1), picker=5) 
         elif regionName == "list":
             polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["list"], ec=(0,0,0,1), picker=5)
+        elif regionName == "linegroup":
+            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["linegroup"], ec=(0,0,0,1), picker=5)
         else:  
             polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["other"], ec=(0,0,0,1), picker=5)
         polygon.regionName = regionName 
         return polygon    
+    
+    
+    def detectRegions(self):
+        
+       
+        
+        #self.ax.axes.clear()  
+        
+        ''' delet all polygon interactors if any '''
+        for polygonInteractor in self.ax.polygonInteractorList:  
+            polygonInteractor.clearCoordinates() 
+            del polygonInteractor 
+        self.ax.polygonInteractorList.clear() 
+        
+        
+        regionList = self.regionAnalysis.inferRegions(self.imgPath)
+        
+        self.loadPolygons(regionList)
+        
+        
+        
+    
     
     def loadImage (self, imgPath):
         image = mpimg.imread(imgPath)
@@ -328,7 +367,7 @@ class Editor ():
                     self.unsaved()
                     self.ax.figure.canvas.draw_idle()  
                     
-        elif event.key in ["P", "H", "C", "ctrl+h", "F", "D", "M", "F", "O", "S", "T", "ctrl+t", "G", "I", "ctrl+l", "Z"] :
+        elif event.key in ["P", "H", "C", "ctrl+h", "F", "D", "M", "F", "O", "S", "T", "ctrl+t", "G", "I", "ctrl+l", "Z", "super+l"] :
        
             self.ax.editor.boxTriggered = True
             self.ax.editor.setCursor()   
@@ -338,6 +377,7 @@ class Editor ():
             elif event.key == "ctrl+h": self.ax.editor.boxType = "header"
             elif event.key == "F": self.ax.editor.boxType = "footer"
             elif event.key == "D": self.ax.editor.boxType = "drop-capital"
+            elif event.key == "super+l": self.ax.editor.boxType = "linegroup"
             elif event.key == "M": self.ax.editor.boxType = "marginalia"
             elif event.key == "F": self.ax.editor.boxType = "footnote"
             elif event.key == "O": self.ax.editor.boxType = "other"
@@ -349,13 +389,16 @@ class Editor ():
             elif event.key == "ctrl+t": self.ax.editor.boxType = "table"
             elif event.key == "G": self.ax.editor.boxType = "graphic"
             elif event.key == "I": self.ax.editor.boxType = "image"
-            elif event.key == "ctrl+l" : 
-                
-                self.ax.editor.boxType = "linedrawing"   
+            elif event.key == "ctrl+l" : self.ax.editor.boxType = "linedrawing"   
         elif event.key == "super+s" or event.key == "alt+s" : 
             self.save() 
         elif event.key == "super+o" or event.key == "alt+o": 
             self.openFile() 
+            
+        elif event.key == "super+d":
+            
+            self.detectRegions()    
+        
             
         elif event.key == "ctrl+q":  
             self.quit()   
@@ -578,6 +621,12 @@ class Editor ():
             elif region.regionName == "list":
                 region.regionClass = "TextRegion" 
                 region.custom = region.regionName 
+                region.type = "other"
+                
+            elif region.regionName =="linegroup":#
+                region.regionClass = "TextRegion"
+                region.custom = region.regionName
+                region.type = "other"
                 
                 
             elif region.regionName in ["table", "graphic", "image", "linedrawing", "separator"]:
@@ -739,6 +788,19 @@ class Editor ():
         def trigger(self, *args, **kwargs):          
             self.ax.editor.boxTriggered = True
             self.ax.editor.boxType = "list"
+            self.ax.editor.setCursor()
+            
+    class LineGroupBox(ToolBase):
+        default_keymap = ''
+        description = 'Add line group'
+        def __init__(self, *args, gid, **kwargs):
+            self.ax = args[0].figure.axes[0]
+            self.ax.editor.boxTriggered = False
+            super().__init__(*args, **kwargs) 
+
+        def trigger(self, *args, **kwargs):          
+            self.ax.editor.boxTriggered = True
+            self.ax.editor.boxType = "linegroup"
             self.ax.editor.setCursor()
             
     class MarginaliaBox(ToolBase):
@@ -1303,6 +1365,7 @@ class TextRegion(object):
         self.index = int(regionIndex) 
         self.custom = custom
         self.regionName = None # this is not part of xml schema but used in matplot only 
+        self.certainty = None
         
         
         if self.regionClass == "TextRegion":
@@ -1311,6 +1374,9 @@ class TextRegion(object):
             
             elif self.type == "other":
                 if self.custom == "list":
+                    self.regionName = self.custom
+                    
+                elif self.custom == "linegroup":
                     self.regionName = self.custom
                 else : 
                     self.regionName = "other"
