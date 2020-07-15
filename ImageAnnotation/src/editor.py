@@ -10,9 +10,13 @@ from matplotlib.widgets import Cursor
 import matplotlib.pyplot as plt 
 import matplotlib.image as mpimg
 from lxml import etree as ET 
-import tkinter as tk 
-from tkinter import ttk, messagebox
+import tkinter as tk
+from tkinter import ttk, messagebox, Tk
 from analysis import RegionAnalysis
+from tkinter.constants import WORD, YES, BOTH, LEFT, NO, BOTTOM, X, END
+from tkinter.tix import ROW
+from tkinter.ttk import Frame
+ 
  
 
  
@@ -36,6 +40,8 @@ class Editor ():
         self.unsavedChanges = False
         
         
+        
+        
         ''' pageClass '''
         self.regionAnalysis = analysis.RegionAnalysis()
          
@@ -53,6 +59,8 @@ class Editor ():
         self.currentPolygonIndex = 0
         
         self.simpleChoixBox = SimpleChoiceBox()  
+        self.textEditorBox = TextEditorBox()
+        
         ''' plot, ax, figure '''
         plt.rcParams['image.cmap'] = 'gray'
         plt.rcParams['toolbar'] = 'toolmanager'   
@@ -177,18 +185,12 @@ class Editor ():
         ''' maximise '''
         if callable(plt.get_current_fig_manager):
             figManager = plt.get_current_fig_manager()
-            if callable (figManager.full_screen_toggle): figManager.full_screen_toggle()
-        
-        
-        
-        
+            if callable (figManager.full_screen_toggle): figManager.full_screen_toggle() 
         
         ''' show plot '''
-        plt.show()  
-        
-        
-    def addPolyGon (self, xyArray): 
-        
+        plt.show()       
+    
+    def addPolyGon (self, xyArray):  
         ''' make sure that coordinates imply a surface and do not correspond to as single point '''
         isSurface = False
         firstX= xyArray[0][0]
@@ -344,18 +346,14 @@ class Editor ():
             self.rect.set_width(event.xdata-self.zoomXMinCoord)
             self.rect.set_height(event.ydata-self.zoomYMinCoord)     
     
-    def nextPage (self):
-        
+    def nextPage (self): 
         if self.imageIndex < (len (self.pageFileList)-1): 
             if self.unsavedChanges: 
                 if messagebox.askyesno("Question","Save changes ?") == True: self.save()
             self.imageIndex = self.imageIndex+1
-            self.loadPage(self.imageIndex) 
-            
+            self.loadPage(self.imageIndex)  
     
-    
-    def on_key(self, event):  
-        
+    def on_key(self, event):   
         print (event.key)
         
         if event.key == "backspace": ### remove polygons  
@@ -395,14 +393,14 @@ class Editor ():
         elif event.key == "super+o" or event.key == "alt+o": 
             self.openFile() 
             
-        elif event.key == "super+d" or event.key =="alt+d":
-            
+        elif event.key == "super+d" or event.key =="alt+d": 
             self.detectRegions()    
         
             
         elif event.key == "ctrl+q":  
             self.quit()   
-        elif event.key == "left": self.previousPage()
+        elif event.key == "left": 
+            self.previousPage()
         elif event.key == "right": self.nextPage() 
         elif event.key == "up": 
             if self.currentPolygonIndex-1 >= 0: self.selectPolygon(self.currentPolygonIndex-1)
@@ -426,11 +424,22 @@ class Editor ():
                     self.fig.canvas.draw_idle()  
                     self.unsaved()
                     
+        elif event.key == "#": 
+            for polygonInter in self.ax.polygonInteractorList: 
+                if polygonInter.showverts == True: 
+                    thread = threading.Thread(target=self.textEditorBox.TextEditorBox(self.regionDictionary, polygonInter)) 
+                    thread.start()  
+                    # wait here for the result to be available before continuing
+                    thread.join()  
+                    thread._stop()   
+                    polygonInter.ocrRegion.unicode = self.textEditorBox.textString
+                   
+             
+            
+                    
     def onclick(self, event):              
         self.onClick = True
-        self.onRelease = False   
-        
-       
+        self.onRelease = False    
         
         if self.boxTriggered == True :
             self.clickX = event.xdata
@@ -1154,6 +1163,57 @@ class PolygonInteractor(object):
         self.poly.centerCoordinates = [xMin+xDif, yMin+yDif]
         
 
+class TextEditorBox():
+    def TextEditorBox(self, regionDictionary, polygonInter):
+        
+        self.regionDictionary = regionDictionary
+        self.polygonInteractor = polygonInter
+        self.ocrRegion = self.polygonInteractor.ocrRegion
+        self.textString = ""
+        
+        print (self.ocrRegion.unicode)
+        
+        if self.ocrRegion.unicode != None: self.textString = self.ocrRegion.unicode
+        self.master = tk.Tk() 
+        self.master.title("Edit text region")
+      
+        # specify size of window. 
+         
+        
+          
+        bottomframe = Frame(self.master)
+        bottomframe.pack( side = BOTTOM )
+   
+        
+        # Create text widget
+        self.text = tk.Text(self.master, wrap=WORD)  
+        
+          
+         
+          
+        # Create button for next text. 
+        self.button_1 = tk.Button(bottomframe, text = "OK", command=self.show_textBox)  
+          
+        # Create an Exit button. 
+        self.button_2 = tk.Button(bottomframe, text = "Cancel", command=self.master.quit) 
+        
+        self.text.pack(expand=YES,fill=BOTH)
+        self.button_1.pack(side=LEFT, fill=X, expand=YES)
+        self.button_2.pack(side=LEFT, fill=X, expand=YES)
+       
+  
+        # Insert The Fact. 
+        self.text.insert(tk.END, self.textString) 
+        
+        self.master.mainloop()
+        self.master.destroy()
+        
+    def show_textBox(self):
+        self.textString = self.text.get("1.0", "end-1c")    
+        self.polygonInteractor.ax.editor.unsaved() 
+        self.master.quit()
+ 
+
 
 class  SimpleChoiceBox():
     def SimpleChoiceBox(self, regionList, polygonInteractor):
@@ -1214,7 +1274,7 @@ class ReadWriteMets ():
         self.xlinkNameEntry = "{http://www.w3.org/1999/xlink}"
         self.nameSpaceDictionary =  {"mets": self.metsNameSpace, "xlink": self.xlinkNameSpace}
         self.tree = ET.parse(xmlFilePath) 
-    def getFileGroup (self, fileGroup="OCR-D-SEG-REGION"):
+    def getFileGroup (self, fileGroup="OCR-D-OCR-CALAMARI_GT4HIST"): # OCR-D-SEG-REGION 
         self.fileGroupList = []   
         for groupeFile in self.tree.xpath('//mets:fileGrp[@USE="%s"]/mets:file/mets:FLocat' % (fileGroup), namespaces = self.nameSpaceDictionary): 
             if  "{http://www.w3.org/1999/xlink}href" in groupeFile.attrib: 
@@ -1253,6 +1313,12 @@ class ReadWritePageXML(object):
             
         return None
         
+    #def readPageLinesXML(self):
+    #    for lineRef in self.tree.xpath("//pc:RegionRefIndexed", namespaces = self.nameSpaceDictionary): 
+        
+        
+    
+    
     
     def readPageRegionXML(self): 
         ''' build reading order dictionary '''
@@ -1278,9 +1344,6 @@ class ReadWritePageXML(object):
                 if "id" in regionClass.attrib: regionId = regionClass.attrib["id"]
                 if "type" in regionClass.attrib: regionType = regionClass.attrib["type"]
                 if "custom" in regionClass.attrib: custom = regionClass.attrib["custom"]
-     
-                
-                
                 
                 for coordinates in regionClass:
                     if coordinates.tag == self.pcNameEntry+"Coords":
@@ -1304,14 +1367,75 @@ class ReadWritePageXML(object):
                                 continue
                              
                             
-                            self.textRegionList.append(TextRegion(coordinatesList, regionId, regionIndex, regionType, regionClass.tag.replace(self.pcNameEntry, ""), custom))
+                            textReg = TextRegion(coordinatesList, regionId, regionIndex, regionType, regionClass.tag.replace(self.pcNameEntry, ""), custom)
+                            
+                            self.textRegionList.append(textReg)
+                            
+                            
+                            ''' get text in region '''
+                            for unicodeText in regionClass:
+                                if unicodeText.tag == self.pcNameEntry+"TextEquiv":
+                                    for unicodeTag in unicodeText:
+                                        if unicodeTag.tag == self.pcNameEntry+"Unicode":
+                                            regionUnicode = unicodeTag.text
+                                            textReg.unicode = regionUnicode
+                                            
+                                    
+                            
+                            
+                            ''' loop over every text line '''
+                            for textLine in regionClass:
+                                if textLine.tag == self.pcNameEntry+"TextLine":
+                                    if "id" in textLine.attrib: 
+                                        lineId = textLine.attrib["id"]
+                                    
+                                    for element_1 in textLine:
+                                        if element_1.tag == self.pcNameEntry+"Coords":
+                                            if textLine.tag == self.pcNameEntry+"TextLine":
+                                                if "points" in element_1.attrib: 
+                                                    
+                                                    lineCoordsStringList = coordinates.attrib["points"].split(" ") 
+                            
+                                                    if len (coordsStringList) <= 1:  break # make sure that the region as at least two coordinates
+                                                        
+                            
+                                                        
+                                                    lineCoordinatesList = []
+                                                    for lineCoordinateString in lineCoordsStringList: 
+                                                        lineCoordinatesList.append([int(i) for i in lineCoordinateString.split(",")] )
+                                                    
+                                                     
+                                                
+                                  
+                                        elif element_1.tag == self.pcNameEntry+"TextEquiv":
+                                            if "conf" in element_1.attrib:
+                                                lineConf = element_1.attrib["conf"]
+                                            
+                                            for element_3 in element_1:
+                                                if element_3.tag == self.pcNameEntry+"Unicode":
+                                                    lineUnicode = element_3.text
+                                                    
+                                                    textReg.textLineDictionary[lineId] = TextLine(lineId, lineCoordinatesList, lineConf, lineUnicode, regionId)
+                                
+                                    
+                                    
+        self.id = None
+        self.coordinates = None
+        self.certainty = None
+        self.textRegionId = None
+        self.textEquiv = None
+                                    
+                            
   
-        ''' sort text regions accordin to index'''
+        ''' sort text regions according to index'''
         
         self.textRegionList = sorted(self.textRegionList, key=lambda textRegion: textRegion.index)
         
         
         return self.textRegionList
+    
+    
+ 
     
     
     def writePageRegionXML(self, polygoninteractorlist): 
@@ -1345,17 +1469,60 @@ class ReadWritePageXML(object):
                 
                 if polygonInteractor.ocrRegion.type != None: attributeDictionary["type"]=polygonInteractor.ocrRegion.type
                 if polygonInteractor.ocrRegion.custom != None: attributeDictionary["custom"]=polygonInteractor.ocrRegion.custom
-                 
+                
+                
  
                 pageRegion = ET.Element(self.pcNameEntry+polygonInteractor.ocrRegion.regionClass, attrib=attributeDictionary,nsmap = self.nameSpaceDictionary)
                 coordinates=  ET.Element(self.pcNameEntry+"Coords",attrib={"points":coordinatesString},nsmap = self.nameSpaceDictionary)
-                pageRegion.append(coordinates)
-                pcPage.append(pageRegion)
+                textEquivNode = ET.Element(self.pcNameEntry +"TextEquiv",nsmap = self.nameSpaceDictionary)
+                unicodeNode = ET.Element(self.pcNameEntry +"Unicode",nsmap = self.nameSpaceDictionary)
+                unicodeNode.text = polygonInteractor.ocrRegion.unicode
+                textEquivNode.append(unicodeNode)
                 
+                pageRegion.append(coordinates)
+                
+                
+                ''' add page regions lines ''' 
+                
+                lineDictionary = polygonInteractor.ocrRegion.textLineDictionary
+                
+                for textLineKey in lineDictionary : 
+                    
+                    textLine = lineDictionary[textLineKey]
+                    
+                    lineCoordinatesString = ""
+                    for lineCoordinates in textLine.coordinates:
+                        lineCoordinatesString = lineCoordinatesString + str(lineCoordinates[0]) + "," + str(lineCoordinates[1]) + " "
+                    lineCoordinatesString = lineCoordinatesString[:-1]
+                    
+                    
+                    
+                    pcTextLine = ET.Element(self.pcNameEntry+"TextLine", attrib={"id": textLine.id },nsmap = self.nameSpaceDictionary)
+                    pcTextLineCoords = ET.Element(self.pcNameEntry+"Coords", attrib={'points':lineCoordinatesString},nsmap = self.nameSpaceDictionary)
+                    pcTextLineEquiv = ET.Element(self.pcNameEntry+"TextEquiv", attrib={'conf':textLine.certainty},nsmap = self.nameSpaceDictionary)
+                    pcTextLineUnicode = ET.Element(self.pcNameEntry+"Unicode",nsmap = self.nameSpaceDictionary)
+                    pcTextLineUnicode.text = textLine.unicode
+                    pcTextLineEquiv.append(pcTextLineUnicode)
+                    pcTextLine.append(pcTextLineCoords)
+                    pcTextLine.append(pcTextLineEquiv)
+                    pageRegion.append(pcTextLine)
+                
+                pageRegion.append(textEquivNode)
+                pcPage.append(pageRegion)  
                 
         ''' write file '''
-        self.tree.write(self.xmlFilePath) 
+        self.tree.write(self.xmlFilePath, encoding='utf-8') 
     
+
+class TextLine (object):
+    def __init__(self, lineId, lineCoordinates, lineConf, lineUnicode, regionId):
+        self.id = lineId
+        self.coordinates = lineCoordinates
+        self.certainty = lineConf
+        self.unicode = lineUnicode
+        self.textRegionId = regionId
+
+
 class TextRegion(object):
     def __init__(self, regionCoordinates,regionId, regionIndex, regionType, regionClass, custom=None):
         self.coordinates = regionCoordinates
@@ -1366,6 +1533,8 @@ class TextRegion(object):
         self.custom = custom
         self.regionName = None # this is not part of xml schema but used in matplot only 
         self.certainty = None
+        self.textLineDictionary={}
+        self.unicode = None
         
         
         if self.regionClass == "TextRegion":
