@@ -1204,6 +1204,7 @@ class TextEditorBox():
   
         # Insert The Fact. 
         self.text.insert(tk.END, self.textString) 
+        self.text.configure(font=("Symbola", 12))
         
         self.master.mainloop()
         self.master.destroy()
