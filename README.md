@@ -12,6 +12,9 @@ TMGImageAnnotation is written in Python. It is based on the matplotlib library a
 pip3 install numpy
 pip3 install lxml
 pip3 install matplotlib
+pip3 install scikit-image
+pip3 install tensorflow==1.6.0
+pip3 install keras==2.1.3
 ```
 Download or clone this project.
 
