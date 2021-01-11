@@ -37,7 +37,7 @@ class Editor ():
         self.zoomTriggered = False
         self.ImageFolderPath = None
         self.pageFolderPath = None   
-        self.unsavedChanges = False 
+        self.unsavedChanges = False
         
         
         
@@ -1275,7 +1275,7 @@ class ReadWriteMets ():
         self.xlinkNameEntry = "{http://www.w3.org/1999/xlink}"
         self.nameSpaceDictionary =  {"mets": self.metsNameSpace, "xlink": self.xlinkNameSpace}
         self.tree = ET.parse(xmlFilePath) 
-    def getFileGroup (self, fileGroup="OCR-D-OCR-CALAMARI_GT4HIST"): # OCR-D-SEG-REGION 
+    def getFileGroup (self, fileGroup="OCR-D-SEG-REGION"): # OCR-D-SEG-REGION or OCR-D-OCR-CALAMARI_GT4HIST
         self.fileGroupList = []   
         for groupeFile in self.tree.xpath('//mets:fileGrp[@USE="%s"]/mets:file/mets:FLocat' % (fileGroup), namespaces = self.nameSpaceDictionary): 
             if  "{http://www.w3.org/1999/xlink}href" in groupeFile.attrib: 

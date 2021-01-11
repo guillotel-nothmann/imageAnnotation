@@ -5,7 +5,7 @@ Created on May 20, 2020M
 '''
 
 ### requires tensforflow 1.6
-### keras 
+### keras==2.1.3 
 
 
 import editor
