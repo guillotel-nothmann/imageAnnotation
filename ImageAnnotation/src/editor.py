@@ -37,7 +37,7 @@ class Editor ():
         self.zoomTriggered = False
         self.ImageFolderPath = None
         self.pageFolderPath = None   
-        self.unsavedChanges = False
+        self.unsavedChanges = False 
         
         
         

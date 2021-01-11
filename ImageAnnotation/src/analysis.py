@@ -27,7 +27,7 @@ class RegionAnalysis(object):
         # Root directory of the project
         ROOT_DIR = os.path.abspath("../")
     
-        # Config
+        # Config 
         config = InferenceConfig()
         
         
