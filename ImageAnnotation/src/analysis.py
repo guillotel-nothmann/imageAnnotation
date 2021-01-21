@@ -57,8 +57,6 @@ class RegionAnalysis(object):
                             "linedrawing",
                             "separator", 
                             "other"]
- 
- 
 
         
         # Create model object in inference mode.

@@ -15,6 +15,7 @@ pip3 install matplotlib
 pip3 install scikit-image
 pip3 install tensorflow==1.6.0
 pip3 install keras==2.1.3
+pip3 install h5py== 2.9
 ```
 Download or clone this project.
 
@@ -52,23 +53,26 @@ Use the following commands to navigate and to edit:
 
 
 Polygon regions can be added using the buttons or the following key combinations: 
-* "shift+C": caption
-* "shift+D": drop capital
-* "shift+F": footer
-* "shift+F": footnote
+* "shift+c": caption
+* "ctrl+d": diagram
+* "shift+d": drop capital
+* "shift+f": footer
+* "ctrl+f": footnote
 * "shift+G": graphic
 * "ctrl+h": header
 * "shift+H": heading
 * "shift+I": image
 * "ctrl+l": linedrawing
+* "shift+Z": list
 * "shift+M": marginalia
 * "shift+O": other
+* "ctrl+O: ornament
 * "shift+P": paragraph
+* "ctrl+p": page number
 * "ctrl+s": separator
 * "shift+S": staff notation
 * "shift+T": tablature notation
 * "ctrl+t": table 
-* "shift+Z": list
 
 
 ## Example

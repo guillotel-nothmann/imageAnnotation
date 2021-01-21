@@ -70,25 +70,29 @@ class Editor ():
         self.ax.editor = self 
         
         ''' dictionaries'''
-        self.fcDictionary= {"paragraph": (0.00,0.50,0.74,0.2), 
-                            "heading": (0.85,0.32,0.09,0.2), 
-                            "caption": (0.92,0.69,0.12,0.2), 
-                            "header": (0.49,0.18,0.55,0.2),
-                            "footer": (0.46,0.67,0.19,0.2),
-                            "drop-capital": (0.30,0.75,0.93,0.2),
-                            "marginalia": (0.64,0.08,0.18,0.2),
-                            "footnote": (0,1,0,0.2), 
-                            "staffNotation": (0.00,0.50,0.74,0.2), 
-                            "tablatureNotation": (0.85,0.32,0.09,0.2), 
-                            "table": (0.92,0.69,0.12,0.2), 
-                            "graphic": (0.49,0.18,0.55,0.2),
-                            "image": (0.46,0.67,0.19,0.2),
-                            "linedrawing": (0.30,0.75,0.93,0.2), 
-                            "separator": (0,1,0,0.2),
-                            "list": (1,1,0,0.2),
-                            "linegroup": (0,1,1,0.2), 
-                            "other": (0,1,0,0.2) 
-                            }
+        self.fcDictionary= {
+            "caption": (0.92,0.69,0.12,0.2),
+            "diagram": (0.30,0.95,0.93,0.2), 
+            "drop-capital": (0.30,0.75,0.93,0.2), 
+            "footer": (0.46,0.67,0.19,0.2),
+            "footnote": (0,1,0,0.2), 
+            "graphic": (0.49,0.18,0.55,0.2),
+            "header": (0.49,0.18,0.55,0.2),
+            "heading": (0.85,0.32,0.09,0.2),
+            "image": (0.46,0.67,0.19,0.2),
+            "linedrawing": (0.30,0.75,0.93,0.2),
+            "linegroup": (0,1,1,0.2), 
+            "list": (1,1,0,0.2),
+            "marginalia": (0.64,0.08,0.18,0.2),
+            "ornament": (0,1,0.8,0.2), 
+            "other": (0,1,0,0.2), 
+            "page-number": (0.30,0.95,0.93,0.2),
+            "paragraph": (0.00,0.50,0.74,0.2), 
+            "separator": (0,1,0,0.2),
+            "staffNotation": (0.00,0.50,0.74,0.2), 
+            "tablatureNotation": (0.85,0.32,0.09,0.2), 
+            "table": (0.92,0.69,0.12,0.2)
+            }
         self.regionDictionary = []
         
         for element in self.fcDictionary:
@@ -126,6 +130,7 @@ class Editor ():
         self.toolmanager.add_tool('Footnote', self.FootnoteBox, gid='textAreaGroup')
         self.toolmanager.add_tool('List', self.ListBox, gid='textAreaGroup')
         self.toolmanager.add_tool('LineGroup', self.LineGroupBox, gid='textAreaGroup')
+        self.toolmanager.add_tool('PageNumber', self.PageNumberBox, gid='textAreaGroup')
         
         ''' 2. Music regions '''
         self.toolmanager.add_tool('Staff notation', self.StaffNotationBox, gid='musicAreaGroup')
@@ -134,9 +139,11 @@ class Editor ():
         ''' 3. Image, tables, and separator regions '''
         self.toolmanager.add_tool('Table', self.TableBox, gid='imageGroup')
         self.toolmanager.add_tool('Graphic', self.GraphicBox, gid='imageGroup')
+        self.toolmanager.add_tool('Diagram', self.DiagramBox, gid='imageGroup')
         self.toolmanager.add_tool('Image', self.ImageBox, gid='imageGroup')
         self.toolmanager.add_tool('Line drawing', self.LineDrawingBox, gid='imageGroup')
-        self.toolmanager.add_tool('Separator', self.LineDrawingBox, gid='imageGroup')
+        self.toolmanager.add_tool('Separator', self.SeparatorBox, gid='imageGroup')
+        self.toolmanager.add_tool('Ornament', self.OrnamentBox, gid='imageGroup')
     
         ''' 4. else '''
         self.toolmanager.add_tool('Other', self.OtherBox, gid='textAreaGroup') 
@@ -170,13 +177,16 @@ class Editor ():
         self.fig.canvas.manager.toolbar.add_tool('Footer', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('Drop-capital', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('Marginalia', '', 1)
+        self.fig.canvas.manager.toolbar.add_tool('PageNumber', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('Footnote', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('List', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('LineGroup', '', 1)
         
         self.fig.canvas.manager.toolbar.add_tool('Staff notation', '', 1) 
         self.fig.canvas.manager.toolbar.add_tool('Tablature notation', '', 1)
-        self.fig.canvas.manager.toolbar.add_tool('Table', '', 1)   
+        self.fig.canvas.manager.toolbar.add_tool('Table', '', 1)  
+        self.fig.canvas.manager.toolbar.add_tool('Diagram', '', 1) 
+        self.fig.canvas.manager.toolbar.add_tool('Ornament', '', 1) 
         self.fig.canvas.manager.toolbar.add_tool('Graphic', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('Image', '', 1)
         self.fig.canvas.manager.toolbar.add_tool('Line drawing', '', 1)
@@ -219,42 +229,8 @@ class Editor ():
         self.unsaved()
     
     def createPolygon (self, regionName, xyArray):
-        if regionName == "paragraph":
-                polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["paragraph"], ec=(0,0,0,1), picker=5)      
-        elif regionName == "heading":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["heading"], ec=(0,0,0,1), picker=5)
-        elif regionName == "caption":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["caption"], ec=(0,0,0,1), picker=5) 
-        elif regionName == "header":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["header"], ec=(0,0,0,1), picker=5)
-        elif regionName == "footer":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["footer"], ec=(0,0,0,1), picker=5)
-        elif regionName == "drop-capital":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["drop-capital"], ec=(0,0,0,1), picker=5)
-        elif regionName == "marginalia":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["marginalia"], ec=(0,0,0,1), picker=5)
-        elif regionName == "footnote":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["footnote"], ec=(0,0,0,1), picker=5)
-        elif regionName == "staffNotation":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["staffNotation"], ec=(0,0,0,1), picker=5)
-        elif regionName == "tablatureNotation":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["tablatureNotation"], ec=(0,0,0,1), picker=5)
-        elif regionName == "table":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["table"], ec=(0,0,0,1), picker=5)
-        elif regionName == "graphic":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["graphic"], ec=(0,0,0,1), picker=5)
-        elif regionName == "image":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["image"], ec=(0,0,0,1), picker=5)
-        elif regionName == "linedrawing":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["linedrawing"], ec=(0,0,0,1), picker=5) 
-        elif regionName == "separator":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["linedrawing"], ec=(0,0,0,1), picker=5) 
-        elif regionName == "separator":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["separator"], ec=(0,0,0,1), picker=5) 
-        elif regionName == "list":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["list"], ec=(0,0,0,1), picker=5)
-        elif regionName == "linegroup":
-            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["linegroup"], ec=(0,0,0,1), picker=5)
+        if regionName in self.fcDictionary:
+            polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary[regionName], ec=(0,0,0,1), picker=5)
         else:  
             polygon = Polygon(xyArray, animated=False, fc=self.fcDictionary["other"], ec=(0,0,0,1), picker=5)
         polygon.regionName = regionName 
@@ -262,9 +238,6 @@ class Editor ():
     
     
     def detectRegions(self):
-        
-       
-        
         #self.ax.axes.clear()  
         
         ''' delet all polygon interactors if any '''
@@ -354,7 +327,7 @@ class Editor ():
             self.loadPage(self.imageIndex)  
     
     def on_key(self, event):   
-        print (event.key)
+      
         
         if event.key == "backspace": ### remove polygons  
             for polygonInteractor in self.ax.polygonInteractorList:
@@ -365,29 +338,34 @@ class Editor ():
                     self.unsaved()
                     self.ax.figure.canvas.draw_idle()  
                     
-        elif event.key in ["P", "H", "C", "ctrl+h", "F", "D", "M", "F", "O", "S", "T", "ctrl+t", "G", "I", "ctrl+l", "Z", "super+l"] :
+        elif event.key in ["C", "D", "ctrl+d", "F", "ctrl+f", "G", "H", "ctrl+h", "I", "ctrl+l", "super+l" "M", "O", "ctrl+o", "P", "ctrl+p", "S", "ctrl+s" "T", "ctrl+t", "Z"] :
        
             self.ax.editor.boxTriggered = True
             self.ax.editor.setCursor()   
-            if event.key == "P": self.ax.editor.boxType = "paragraph"
-            elif event.key == "H": self.ax.editor.boxType = "heading"
-            elif event.key == "C": self.ax.editor.boxType = "caption"
-            elif event.key == "ctrl+h": self.ax.editor.boxType = "header"
-            elif event.key == "F": self.ax.editor.boxType = "footer"
+            if event.key == "C": self.ax.editor.boxType = "caption"
             elif event.key == "D": self.ax.editor.boxType = "drop-capital"
+            elif event.key == "ctrl+d": self.ax.editor.boxType = "diagram"
+            elif event.key == "F": self.ax.editor.boxType = "footer"
+            elif event.key == "ctrl+f": self.ax.editor.boxType = "footnote" # check this
+            elif event.key == "G": self.ax.editor.boxType = "graphic"
+            elif event.key == "H": self.ax.editor.boxType = "heading"
+            elif event.key == "ctrl+h": self.ax.editor.boxType = "header"
+            elif event.key == "I": self.ax.editor.boxType = "image"
+            elif event.key == "ctrl+l" : self.ax.editor.boxType = "linedrawing"
             elif event.key == "super+l": self.ax.editor.boxType = "linegroup"
             elif event.key == "M": self.ax.editor.boxType = "marginalia"
-            elif event.key == "F": self.ax.editor.boxType = "footnote"
             elif event.key == "O": self.ax.editor.boxType = "other"
-            elif event.key == "Z": self.ax.editor.boxType = "list"
-            
+            elif event.key == "ctrl+o": self.ax.editor.boxType = "ornament"
+            elif event.key == "P": self.ax.editor.boxType = "paragraph"
+            elif event.key == "ctrl+p": self.ax.editor.boxType = "page-number"
             elif event.key == "S": self.ax.editor.boxType = "staffNotation"
             elif event.key == "ctrl+s": self.ax.editor.boxType = "separator"
-            elif event.key == "T": self.ax.editor.boxType = "tablatureNotation"
+            elif event.key == "T": self.ax.editor.boxType = "tablatureNotation" 
             elif event.key == "ctrl+t": self.ax.editor.boxType = "table"
-            elif event.key == "G": self.ax.editor.boxType = "graphic"
-            elif event.key == "I": self.ax.editor.boxType = "image"
-            elif event.key == "ctrl+l" : self.ax.editor.boxType = "linedrawing"   
+            elif event.key == "Z": self.ax.editor.boxType = "list"
+            
+            
+               
         elif event.key == "super+s" or event.key == "alt+s" : 
             self.save() 
         elif event.key == "super+o" or event.key == "alt+o": 
@@ -617,8 +595,10 @@ class Editor ():
             region.index = counter
             region.id = "region_id_" + str(region.index)
             
+           
+            
             ''' complete region class, custom, type according  '''
-            if region.regionName in ["paragraph", "heading", "caption", "header", "footer", "drop-capital", "marginalia", "footnote", "other"]:
+            if region.regionName in ["paragraph", "heading", "caption", "header", "footer", "drop-capital", "marginalia", "footnote", "page-number", "other"]:
                 region.regionClass = "TextRegion" 
                 region.type = region.regionName
                 
@@ -638,6 +618,14 @@ class Editor ():
                 region.type = "other"
                 
                 
+            elif region.regionName == "diagram":
+                region.regionClass = "ChartRegion"  
+                
+            elif region.regionName == "ornament":
+                region.regionClass = "GraphicRegion"
+                region.type = "decoration" 
+            
+            
             elif region.regionName in ["table", "graphic", "image", "linedrawing", "separator"]:
                 region.custom = None
                 region.type = None
@@ -681,6 +669,20 @@ class Editor ():
                     
                     self.ax.figure.canvas.draw_idle() 
                     
+    
+    class DiagramBox(ToolBase):
+        default_keymap = ''
+        description = 'Identify a diagram'
+        def __init__(self, *args, gid, **kwargs):
+            self.ax = args[0].figure.axes[0]
+            self.ax.editor.boxTriggered = False
+            super().__init__(*args, **kwargs) 
+
+        def trigger(self, *args, **kwargs):       
+            self.ax.editor.boxTriggered = True
+            self.ax.editor.boxType = "diagram"
+            self.ax.editor.setCursor()
+    
     class DropCapitalBox(ToolBase):
         default_keymap = ''
         description = 'Identify a drop-capital'
@@ -844,6 +846,22 @@ class Editor ():
         def trigger(self, *args, **kwargs): 
             self.ax.editor.openFile()
     
+    
+    
+    class OrnamentBox(ToolBase):
+        default_keymap = ''
+        description = 'Identify an ornament'
+        def __init__(self, *args, gid, **kwargs):
+            self.ax = args[0].figure.axes[0]
+            self.ax.editor.boxTriggered = False
+            super().__init__(*args, **kwargs) 
+
+        def trigger(self, *args, **kwargs):       
+            self.ax.editor.boxTriggered = True
+            self.ax.editor.boxType = "ornament"
+            self.ax.editor.setCursor()
+    
+    
     class OtherBox(ToolBase):
         default_keymap = ''
         description = 'Identify other text areas'
@@ -857,6 +875,20 @@ class Editor ():
             self.ax.editor.boxType = "other"
             self.ax.editor.setCursor()
             
+    class PageNumberBox(ToolBase): 
+        default_keymap = ''
+        description = 'Identify a page number'
+        def __init__(self, *args, gid, **kwargs):
+
+            self.ax = args[0].figure.axes[0]
+            self.ax.editor.boxTriggered = False
+            super().__init__(*args, **kwargs)  
+        def trigger(self, *args, **kwargs):       
+            self.ax.editor.boxTriggered = True
+            self.ax.editor.boxType = "page-number"
+            self.ax.editor.setCursor() 
+    
+    
     class ParagraphBox(ToolBase): 
         default_keymap = ''
         description = 'Identify a paragraph'
@@ -1171,7 +1203,6 @@ class TextEditorBox():
         self.ocrRegion = self.polygonInteractor.ocrRegion
         self.textString = ""
         
-        print (self.ocrRegion.unicode)
         
         if self.ocrRegion.unicode != None: self.textString = self.ocrRegion.unicode
         self.master = tk.Tk() 
@@ -1429,14 +1460,9 @@ class ReadWritePageXML(object):
                             
   
         ''' sort text regions according to index'''
-        
         self.textRegionList = sorted(self.textRegionList, key=lambda textRegion: textRegion.index)
         
-        
         return self.textRegionList
-    
-    
- 
     
     
     def writePageRegionXML(self, polygoninteractorlist): 
@@ -1471,7 +1497,8 @@ class ReadWritePageXML(object):
                 if polygonInteractor.ocrRegion.type != None: attributeDictionary["type"]=polygonInteractor.ocrRegion.type
                 if polygonInteractor.ocrRegion.custom != None: attributeDictionary["custom"]=polygonInteractor.ocrRegion.custom
                 
-                
+                 
+         
  
                 pageRegion = ET.Element(self.pcNameEntry+polygonInteractor.ocrRegion.regionClass, attrib=attributeDictionary,nsmap = self.nameSpaceDictionary)
                 coordinates=  ET.Element(self.pcNameEntry+"Coords",attrib={"points":coordinatesString},nsmap = self.nameSpaceDictionary)
@@ -1538,9 +1565,12 @@ class TextRegion(object):
         self.unicode = None
         
         
+        
         if self.regionClass == "TextRegion":
-            if self.type in ["paragraph", "caption", "header", "heading", "footer", "drop-capital", "marginalia", "footnote"]:
+            if self.type in ["paragraph", "caption", "header", "heading", "footer", "drop-capital", "marginalia", "footnote", "page-number"]:
                 self.regionName = self.type   
+                
+                
             
             elif self.type == "other":
                 if self.custom == "list":
@@ -1550,23 +1580,28 @@ class TextRegion(object):
                     self.regionName = self.custom
                 else : 
                     self.regionName = "other"
-                
-            
-            else: self.regionName = "other"
-                
-                
-        
-        
-        
+            else: self.regionName = "other" 
         elif self.regionClass == "MusicRegion": 
             if self.custom=="staffNotation": self.regionName=  "staffNotation"
             elif self.custom == "tablatureNotation": self.regionName = "tablatureNotation"
                 
         elif self.regionClass == "TableRegion": self.regionName = "table"
-        elif self.regionClass == "GraphicRegion": self.regionName = "graphic"
+        elif self.regionClass == "GraphicRegion": 
+            if self.type == "decoration":
+                self.regionName = "ornament"
+            else:
+                self.regionName = "graphic"
         elif self.regionClass == "ImageRegion": self.regionName = "image"
         elif self.regionClass == "LineDrawingRegion": self.regionName = "linedrawing"
         elif self.regionClass == "SeparatorRegion": self.regionName = "separator"
+        
+        elif self.regionClass == "ChartRegion": self.regionName = "diagram"
+        elif self.regionClass == "ChartRegion": self.regionName = "diagram"
+        
+        
+        
+       
+        
         
        
         
