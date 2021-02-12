@@ -72,7 +72,7 @@ class Editor ():
         ''' dictionaries'''
         self.fcDictionary= {
             "caption": (0.92,0.69,0.12,0.2),
-            "diagram": (0.30,0.95,0.93,0.2), 
+            "diagram": (0.30,0.95,0.93,0.2), ### à supprimer 
             "drop-capital": (0.30,0.75,0.93,0.2), 
             "footer": (0.46,0.67,0.19,0.2),
             "footnote": (0,1,0,0.2), 
@@ -1325,7 +1325,7 @@ class ReadWritePageXML(object):
         self.nameSpaceDictionary =  {"pc": self.pcNameSpace}
         self.regionRefDictionary = {}
         self.textRegionList = []
-        self.regionDictionary = ["TextRegion", "GraphicRegion", "ImageRegion", "LineDrawingRegion", "MusicRegion", "TableRegion", "SeparatorRegion" ]
+        self.regionDictionary = ["TextRegion", "ChartRegion", "GraphicRegion", "ImageRegion", "LineDrawingRegion", "MusicRegion", "TableRegion", "SeparatorRegion" ]
         
  
         self.tree = ET.parse(xmlFilePath)
@@ -1595,8 +1595,7 @@ class TextRegion(object):
         elif self.regionClass == "LineDrawingRegion": self.regionName = "linedrawing"
         elif self.regionClass == "SeparatorRegion": self.regionName = "separator"
         
-        elif self.regionClass == "ChartRegion": self.regionName = "diagram"
-        elif self.regionClass == "ChartRegion": self.regionName = "diagram"
+        elif self.regionClass == "ChartRegion": self.regionName = "diagram" 
         
         
         
