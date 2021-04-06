@@ -72,7 +72,7 @@ class Editor ():
         ''' dictionaries'''
         self.fcDictionary= {
             "caption": (0.92,0.69,0.12,0.2),
-            "diagram": (0.30,0.95,0.93,0.2), ### à supprimer 
+            "diagram": (0.30,0.95,0.93,0.2), 
             "drop-capital": (0.30,0.75,0.93,0.2), 
             "footer": (0.46,0.67,0.19,0.2),
             "footnote": (0,1,0,0.2), 
@@ -1349,8 +1349,6 @@ class ReadWritePageXML(object):
     #    for lineRef in self.tree.xpath("//pc:RegionRefIndexed", namespaces = self.nameSpaceDictionary): 
         
         
-    
-    
     
     def readPageRegionXML(self): 
         ''' build reading order dictionary '''

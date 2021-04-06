@@ -17,7 +17,7 @@ class InferenceConfig(Config):
     # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
-    NUM_CLASSES=19
+    NUM_CLASSES=22
     
      
 
@@ -47,17 +47,21 @@ class RegionAnalysis(object):
                             "drop-capital",
                             "marginalia",
                             "footnote",
-                            "linegroup",
+                            "page-number",
                             "list",#10
+                            "linegroup",
                             "staffNotation",
                             "tablatureNotation",
                             "table",
+                            "ornament", #15
                             "graphic",
-                            "image",#15
+                            "image",
                             "linedrawing",
-                            "separator", 
+                            "separator",
+                            "diagram", #20
                             "other"]
 
+        
         
         # Create model object in inference mode.
         # Create model
