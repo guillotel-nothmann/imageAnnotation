@@ -60,6 +60,7 @@ class Editor ():
         
         self.simpleChoixBox = SimpleChoiceBox()  
         self.textEditorBox = TextEditorBox()
+        self.metsChoiceBox = MetsChoiceBox("OCR-D-SEG-REGION")
         
         ''' plot, ax, figure '''
         plt.rcParams['image.cmap'] = 'gray'
@@ -372,7 +373,24 @@ class Editor ():
             self.openFile() 
             
         elif event.key == "super+d" or event.key =="alt+d": 
-            self.detectRegions()    
+            self.detectRegions()   
+            
+        elif event.key == "super+m" or event.key == "alt+m" :
+            
+            thread = threading.Thread( target=self.metsChoiceBox.MetsChoiceBox(["OCR-D-SEG-REGION", "OCR-D-OCR-CALAMARI_GT4HIST"])) ## this should be derived from the mets data
+            thread.start() 
+            # wait here for the result to be available before continuing
+            thread.join()
+            thread._stop()
+            
+            print (self.metsChoiceBox.metsType)
+            
+            self.pageFileList = self.metsData.getFileGroup(self.metsChoiceBox.metsType)
+        
+            ''' load first page '''
+            self.loadPage(self.imageIndex) 
+            
+            
         
             
         elif event.key == "ctrl+q":  
@@ -1246,6 +1264,54 @@ class TextEditorBox():
         self.master.quit()
  
 
+class MetsChoiceBox():
+    
+    def __init__(self, metsType):
+        self.metsType = metsType
+        
+        
+    def MetsChoiceBox (self, choiceList):
+        self.choiceList = choiceList
+        
+        self.master = tk.Tk()
+        self.master.title("Mets type")
+ 
+        tk.Label(self.master,text="Mets name").grid(row=0)
+        tk.Label(self.master,text="Reading order").grid(row=1)
+        
+        for counter, metsType in enumerate(self.choiceList):
+            if metsType == self.metsType:
+                currentIndex = counter
+                break  
+        
+    
+        
+        self.entry = tk.Entry(self.master)
+  
+        
+        self.comboBoxRegion = ttk.Combobox(self.master,  values=choiceList, state='readonly')
+        self.comboBoxRegion.current(currentIndex) 
+        
+        
+        #self.entry = tk.Entry(self.master)
+        #self.entry.insert(0, self.ocrRegion.index)
+
+         
+        self.comboBoxRegion.grid(row=0, column=1)
+        self.entry.grid(row=1, column=1)
+         
+        tk.Button(self.master,  text='Cancel', command=self.master.quit).grid(row=3,  column=0, sticky=tk.W, pady=4)
+        tk.Button(self.master, text='OK', command=self.show_entry_fields).grid(row=3,  column=1,  sticky=tk.W, pady=4)
+        
+        self.master.mainloop()
+        self.master.destroy()
+        
+    def show_entry_fields(self):
+        self.metsType = self.comboBoxRegion.get()       
+        self.master.quit()
+        
+        
+
 
 class  SimpleChoiceBox():
     def SimpleChoiceBox(self, regionList, polygonInteractor):
@@ -1306,7 +1372,7 @@ class ReadWriteMets ():
         self.xlinkNameEntry = "{http://www.w3.org/1999/xlink}"
         self.nameSpaceDictionary =  {"mets": self.metsNameSpace, "xlink": self.xlinkNameSpace}
         self.tree = ET.parse(xmlFilePath) 
-    def getFileGroup (self, fileGroup="OCR-D-SEG-REGION"): # OCR-D-SEG-REGION or OCR-D-OCR-CALAMARI_GT4HIST
+    def getFileGroup (self, fileGroup="OCR-D-OCR-CALAMARI_GT4HIST"): # OCR-D-SEG-REGION or OCR-D-OCR-CALAMARI_GT4HIST
         self.fileGroupList = []   
         for groupeFile in self.tree.xpath('//mets:fileGrp[@USE="%s"]/mets:file/mets:FLocat' % (fileGroup), namespaces = self.nameSpaceDictionary): 
             if  "{http://www.w3.org/1999/xlink}href" in groupeFile.attrib: 
