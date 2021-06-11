@@ -43,9 +43,6 @@ class Editor ():
         #rwPage.updateTextLines()
         #print (rwPage)
         
-        
-        
-        
         ''' pageClass '''
         self.regionAnalysis = analysis.RegionAnalysis()
          
