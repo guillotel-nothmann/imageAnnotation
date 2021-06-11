@@ -39,6 +39,10 @@ class Editor ():
         self.pageFolderPath = None   
         self.unsavedChanges = False
         
+        #rwPage = ReadWritePageXML("/Users/christophe/Documents/GitHub/imageAnnotationGroundTruth/Marpurg_1757/data/OCR-D-OCR-CALAMARI_GT4HIST/OCR-D-OCR-CALAMARI_GT4HIST_Marpurg_1757-093.xml")
+        #rwPage.updateTextLines()
+        #print (rwPage)
+        
         
         
         
@@ -100,6 +104,8 @@ class Editor ():
             self.regionDictionary.append(element) 
         
         
+        
+    
         
         ''' events '''
         self.fig.canvas.mpl_connect('button_press_event', self.onclick)
@@ -273,8 +279,15 @@ class Editor ():
             del polygonInteractor 
         self.ax.polygonInteractorList.clear() 
         
+        print (self.projectFilePath)
+        print (self.pageFileList)
+        
         
         ''' read page '''
+        print (self.projectFilePath)
+        print (pageIndex)
+        print (self.pageFileList)
+        
         self.pageXMLPath = self.projectFilePath+self.pageFileList[pageIndex]
         self.pageXML = ReadWritePageXML(self.pageXMLPath)
         self.imgPath = self.projectFilePath + self.pageXML.getImagePath()
@@ -428,7 +441,10 @@ class Editor ():
                     # wait here for the result to be available before continuing
                     thread.join()  
                     thread._stop()   
-                    polygonInter.ocrRegion.unicode = self.textEditorBox.textString
+                    #polygonInter.ocrRegion.unicode = self.textEditorBox.textString
+                    
+                    self.updateTextInRegion (polygonInter.ocrRegion, self.textEditorBox.textString)
+                    
                    
              
             
@@ -656,6 +672,19 @@ class Editor ():
             region.coordinates = region.coordinates.astype(int)   
             
             
+    def updateTextInRegion(self, region, text):
+        region.unicode = self.textEditorBox.textString
+        textLineDict = region.textLineDictionary
+        textLines = text.split("\n")
+        
+        if len (textLineDict) == len (textLines):
+            counter = 0
+            for key in textLineDict: 
+                textLineDict[key].unicode = textLines[counter] 
+                counter = counter +1
+        else:
+            print ("Cannot update texte lines: number of lines does not correspond")
+    
     class CaptionBox(ToolBase):
         default_keymap = ''
         description = 'Identify a caption'
@@ -1414,7 +1443,46 @@ class ReadWritePageXML(object):
     #def readPageLinesXML(self):
     #    for lineRef in self.tree.xpath("//pc:RegionRefIndexed", namespaces = self.nameSpaceDictionary): 
         
+            
+                
+                
+                
+                
         
+    
+    def updateTextLines (self):
+        ''' given a text region, this functions takes the textequiv, splits its lines and injects them in text lines '''
+        
+        for textRegion in self.tree.xpath("//pc:TextRegion", namespaces = self.nameSpaceDictionary):  
+            
+            for textEquiv in textRegion.xpath("pc:TextEquiv/pc:Unicode", namespaces = self.nameSpaceDictionary):
+                textLines = textEquiv.text.split("\n")
+                
+            
+            textLineNb  = len (textRegion.xpath("pc:TextLine/pc:TextEquiv/pc:Unicode", namespaces = self.nameSpaceDictionary))
+              
+                
+            if (len (textLines) == textLineNb): # number of text lines in region and individual line number matches
+                
+                for counter, textLine in enumerate (textRegion.xpath("pc:TextLine/pc:TextEquiv/pc:Unicode", namespaces = self.nameSpaceDictionary)):
+                    textLine.text = textLines [counter]
+                    
+            else :
+                print ("Cannot update texte lines: number of lines does not correspond")
+                
+        
+        ''' write file '''
+        print ("update textlines in " + self.xmlFilePath)
+        self.tree.write(self.xmlFilePath, encoding='utf-8')
+                    
+                 
+                
+            
+            
+              
+    
+    
+    
     
     def readPageRegionXML(self): 
         ''' build reading order dictionary '''
@@ -1598,6 +1666,7 @@ class ReadWritePageXML(object):
                     pcTextLine.append(pcTextLineCoords)
                     pcTextLine.append(pcTextLineEquiv)
                     pageRegion.append(pcTextLine)
+                    
                 
                 pageRegion.append(textEquivNode)
                 pcPage.append(pageRegion)  
